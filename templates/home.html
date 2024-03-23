@@ -1,0 +1,73 @@
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f2f2f2;
+    }
+
+    .container {
+        max-width: 1200px; /* Maximum width of the container */
+        margin: 0 auto; /* Center the container */
+        padding: 20px; /* Add padding around the container */
+        display: flex; /* Use Flexbox to create a responsive layout */
+        flex-wrap: wrap; /* Allow items to wrap onto multiple lines */
+        justify-content: center; /* Center-align items */
+    }
+
+    .card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow effect */
+        margin: 20px; /* Add spacing between cards */
+        width: 300px; /* Width of each card */
+        overflow: hidden; /* Hide overflowing content */
+        transition: transform 0.3s ease-in-out; /* Add smooth hover effect */
+    }
+
+    .card:hover {
+        transform: translateY(-5px); /* Move card slightly up on hover */
+    }
+
+    .card img {
+        width: 100%; /* Make images fill the card width */
+        height: 200px; /* Set fixed height for images */
+        object-fit: cover; /* Scale images to cover the entire space */
+        border-bottom: 1px solid #ddd; /* Add border at the bottom of the image */
+    }
+
+    .card-content {
+        padding: 20px; /* Add padding inside the card */
+    }
+
+    .card-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .card-description {
+        font-size: 16px;
+        color: #666;
+    }
+
+    .card-link {
+        text-decoration: none;
+        color:black;
+    }
+</style>
+{% extends 'base.html' %} {% block body %}
+<div class="container">
+    {% for card in cards %}
+    <div class="card">
+        <a class="card-link" href={{card.link}}>
+            <img src={{card.image}} alt={{card.alt}}>
+            <div class="card-content">
+            <h3 class="card-title">{{card.Title}}</h3>
+            <p class="card-description">{{card.short_desc}}</p>
+        </div>  
+    </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
