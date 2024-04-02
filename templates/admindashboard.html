@@ -1,0 +1,57 @@
+<style>
+    .claimhistory {
+    text-align: center;
+}
+
+.claims,
+.claimhistory {
+    background-color: rgb(124, 138, 111);
+    width: 80%;
+    border-radius: 5px;
+    text-align: center;
+    color: #f2f2f2;
+    padding: 5px;
+    margin: 3px;
+    border: 2px solid rgb(100, 112, 90);
+    box-sizing: border-box;
+    list-style-type: none;
+}
+</style>
+{% extends 'admin-base.html' %} {% block body %}
+<div class="container-fluid">
+<div class="row">
+    <nav class="col-md-2 d-md-block bg-light sidebar"> <!-- sidebar -->
+        <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/customers">
+                        View Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/policies">
+                        View Policies
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_bp.view_claims') }}">
+                        View Pending Claims
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        Approve Claims
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        Reports and Analytics
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+  
+</div>
+</div>
+{% endblock %}
