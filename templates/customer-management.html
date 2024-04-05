@@ -1,0 +1,13 @@
+{% extends 'admin-base.html' %} {% block body %}
+<div class="movie-list-container">
+  {% for customer in customers %}
+  <ul>
+    <li><p>{{customer.FirstName}}</p>
+        <form action="{{url_for('admin_bp.show_update_customer') }}" method="POST">
+        <input name="CustomerID" type="text" value="{{customer.CustomerID}}" hidden />
+        <button type="submit">Update</button>
+      </form>
+    </li>
+  </ul>
+  {% endfor %}
+{% endblock %}

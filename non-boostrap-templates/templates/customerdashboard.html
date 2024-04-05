@@ -1,0 +1,192 @@
+<style>
+    .container {
+        display: grid;
+        grid-template-columns: 1fr;
+        justify-items: center;
+        align-items: center;
+    }
+
+    .welcome,
+    .claimhistory {
+        text-align: center;
+    }
+
+    .custName {
+        font-weight: bold;
+    }
+
+    .heading {
+        font-size: x-large;
+    }
+
+    .largerscreens {
+        display: none;
+    }
+
+    .claims, .claimhistory {
+        background-color: rgb(124, 138, 111);
+        width: 80%;
+        border-radius: 5px;
+        text-align: center;
+        color: #f2f2f2;
+        padding: 5px;
+            margin: 3px;
+            border: 2px solid rgb(100, 112, 90);
+            box-sizing: border-box;
+    }
+
+    @media (min-width: 400px) {
+        .largerscreens {
+            display: block;
+        }
+
+        .largercontainer {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            justify-items: center;
+            align-items: stretch;
+        }
+
+        .smallerscreens {
+            display: none;
+        }
+
+        .button-like {
+            background-color: rgb(124, 138, 111);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            padding: 5px;
+            margin: 3px;
+            border: 2px solid rgb(100, 112, 90);
+            box-sizing: border-box;
+            display: block;
+        }
+
+        .largerscreens {
+        background-color: #f2f2f2;
+        padding: 20px;
+        border-radius: 20px;
+        margin: 10px;
+        }
+    }
+
+    ul {
+        list-style-type: none;
+        /* maybe ordered */
+    }
+
+    @media (max-width: 400px) {
+        .button-like {
+            background-color: rgb(124, 138, 111);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 80%;
+            padding: 5px;
+            margin: 3px;
+            border: 2px solid rgb(100, 112, 90);
+            box-sizing: border-box;
+            display: block;
+        }
+
+        .smallerscreens {
+        background-color: #f2f2f2;
+        padding: 10px;
+        border-radius: 20px;
+        margin: 10px;
+        }
+    }
+</style>
+{% extends 'base.html' %} {% block body %}
+
+<div class="welcome">
+    <p class="heading">Welcome, <span class="custName">Customer Name</span></p>
+</div>
+
+<!-- for a screen size larger than x -->
+<div class="largerscreens">
+    <div class="largercontainer">
+        <div class="leftside">
+            <p class="button-like"><a>File a new claim</a></p>
+            <p class="button-like"><a>View my policies</a></p>
+            <p class="button-like"><a>Take out a new policy</a></p>
+            <p class="button-like"><a>Update my profile</a></p>
+        </div>
+        <div class="claims">
+            <h3>Pending Claims</h3>
+            <ul>
+                <li>pending</li>
+                <li>pending</li>
+                <li>pending</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="claimhistory">
+        <h3>Claim history</h3>
+        <ul>
+            <li>claim</li>
+            <li>claim</li>
+            <li>claim</li>
+        </ul>
+    </div>
+</div>
+
+<!-- screen size smaller than x -->
+
+<div class="smallerscreens">
+    <div class="container">
+        <p class="button-like"><a>File a new claim</a></p>
+        <p class="button-like"><a>View my policies</a></p>
+        <p class="button-like"><a>Open a new policy</a></p>
+        <p class="button-like"><a>View claim history</a></p>
+        <p class="button-like"><a>pending claims</a></p>
+        <p class="button-like"><a>claim history</a></p>
+        <p class="button-like"><a>Update my profile</a></p>
+    </div>
+</div>
+
+{% endblock %}
+<div class="outer-container">
+    <div class="inner-container">
+      <div class="left">Left Content</div>
+      <div class="right">Right Content</div>
+    </div>
+
+    <div class="other-inner-container">
+        <div class="full">full Content</div>
+      </div>
+  </div>
+
+  .outer-container {
+    display: grid;
+    grid-template-rows: 1fr; /* Outer container height of 1fr */
+  }
+  
+  .inner-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Inner container with columns in 1fr to 2fr ratio */
+  }
+  
+  .left, .right {
+    width: 100%; /* Ensure content fills the available space within the grid item */
+  }
+  
+  .left {
+    background-color: lightblue;
+  }
+  
+  .right {
+    background-color: lightgreen;
+  }
+  
+  .other-inner-container {
+    width: 100%; /* Ensure the inner container spans the full width of the outer container */
+  }
+  
+  .full {
+    width: 100%; /* Ensure full content fills the available space within the inner container */
+    background-color: lightyellow;
+  }

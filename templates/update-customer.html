@@ -1,0 +1,99 @@
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        margin: 70px auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    h2 {
+        text-align: center;
+    }
+
+    form {
+        background-color: #f2f2f2;
+        padding: 20px;
+        border-radius: 20px;
+        width: 50%;
+    }
+
+    .input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+        background-color: rgb(124, 138, 111);
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"]:hover {
+        background-color: rgb(144, 171, 120);
+    }
+
+    .Forgotpass {
+        margin-top: 0px;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .signup {
+        text-align: center;
+        margin-bottom: 0px;
+    }
+</style>
+{% extends 'admin-base.html' %} {% block body %}
+<div class="container">
+    <h2 class="mb-4">Update Customer</h2>
+    <form action="{{ url_for('admin_bp.update_customer_info', CustomerID=customer.CustomerID) }}" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.FirstName.label(class="form-control-label") }}
+            {{ form.FirstName(class="form-control", value=form.FirstName.data) }}
+            {% for error in form.FirstName.errors %}
+                <small class="form-text text-danger">{{ error }}</small>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.LastName.label(class="form-control-label") }}
+            {{ form.LastName(class="form-control", value=form.LastName.data) }}
+            {% for error in form.LastName.errors %}
+                <small class="form-text text-danger">{{ error }}</small>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.Email.label(class="form-control-label") }}
+            {{ form.Email(class="form-control", value=form.Email.data) }}
+            {% for error in form.Email.errors %}
+                <small class="form-text text-danger">{{ error }}</small>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.PhoneNumber.label(class="form-control-label") }}
+            {{ form.PhoneNumber(class="form-control", value=form.PhoneNumber.data) }}
+            {% for error in form.PhoneNumber.errors %}
+                <small class="form-text text-danger">{{ error }}</small>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
+    </form>
+</div>
+{% endblock %}

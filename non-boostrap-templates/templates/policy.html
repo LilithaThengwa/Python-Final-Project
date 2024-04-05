@@ -1,0 +1,117 @@
+<style>
+    @media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+    .policy {
+        margin: 10px;
+    }
+    
+    img {
+        /* width: 100%;
+        height: auto; */
+        display: none;
+    }
+}
+
+/* Style for larger screens (tablets, desktops) */
+@media (min-width: 601px) {
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        justify-content: center;
+        align-items: baseline;
+    }
+    /* .policy {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        justify-content: center;
+        align-items: center;
+    } */
+
+    img {
+        width: 100%;
+        max-height: 300px;
+        object-fit: cover;
+    }
+    
+    .policy h3,
+    .policy p {
+        margin: 5px;
+    }
+}
+
+.estimate-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box; /* Include padding and border are in the width */
+        }
+        
+        .get-estimate {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+</style>
+{% extends 'base.html' %} {% block body %}
+<img src="{{ policy.image }}" alt="{{ policy.alt }}">
+<div class="container">
+    <div class="policy">
+        <h3>{{ policy.name }}</h3>
+        <p>{{ policy.desc }}</p>
+    </div>
+    <div class="estimate-container">
+        <h3>Get Insurance Estimate</h3>
+        <form action="/submit_estimate" method="post">
+            <div class="form-group">
+                <label for="cover_amount">Cover Amount Required:</label>
+                <input type="number" id="cover_amount" name="cover_amount" required>
+            </div>
+            <div class="form-group">
+                <label for="cover_type">Type of Cover Required:</label>
+                <select id="cover_type" name="cover_type" required>
+                    <option value="">Select Cover Type</option>
+                    <option value="Car Insurance">Car Insurance</option>
+                    <option value="Legal Insurance">Legal Insurance</option>
+                    <option value="Niche Insurance">Niche Insurance</option>
+                    <option value="Health Insurance">Health Insurance</option>
+                    <option value="High Value Insurance">High Value Insurance</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+            <div class="form-group">
+                <label for="occupation">Occupation:</label>
+                <input type="text" id="occupation" name="occupation" required>
+            </div>
+            <div>
+                <input class="get-estimate" type="submit" value="Get Estimate">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

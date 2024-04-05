@@ -60,35 +60,16 @@
         margin-bottom: 0px;
     }
 </style>
-{% extends 'base.html' %} {% block body %}
+{% extends 'base.html' %} {%block body %}
+
 <div class="container">
-    <h1>Login</h1>
-    <!-- action="" -> Submit to current url  -->
-    <form method="POST" action="">
-        {{form.hidden_tag()}} 
-        {% if form.username.errors %} 
-        {% for error in form.username.errors %}
-        <div style="color: red">{{error}}</div>
-        {% endfor %} 
-        {% endif %} 
-
-        {% if form.password.errors %} 
-        {% for error in form.password.errors %}
-        <div style="color: red">{{error}}</div>
-        {% endfor %} 
-        {% endif %}
-
-        <div class="form-group">
-            {{form.username.label}}: 
-            {{form.username(placeholder="username", class="form-control")}}
-        </div>
-        <div class="form-group">
-            {{form.password.label}}: 
-            {{form.password(placeholder="Password", class="form-control")}}
-            <p class="Forgotpass"><a href="/register">Forgot your password?</a></p>
-        </div>
-        {{form.submit(class="btn btn-primary")}}
-    </form>
-    <p class="signup">No account? <a href="/user/register"> Sign Up</a></p>
+    <h2>Login</h2>
+    <form action="/login" method="post">
+        <input class="input" type="text" name="username" placeholder="Username"><br>
+        <input class="input" type="password" name="password" placeholder="Password"><br>
+        <p class="Forgotpass"><a href="/signup">Forgot your password?</a></p>
+        <input type="submit" value="Login">
+    <p class="signup">No account? <a href="/signup"> Sign Up</a></p>
 </div>
+
 {% endblock %}

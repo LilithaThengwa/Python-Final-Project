@@ -1,100 +1,34 @@
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
-    .container {
-        margin: 70px auto;
-        display: grid;
-        grid-template-columns: 1fr;
-        justify-items: center;
-    }
-
-    h2 {
-        text-align: center;
-    }
-
-    textarea {
-        height: 100px;
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 2px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-    }
-
-
-    .form, .contactinfo {
-        background-color: #f2f2f2;
-        padding: 20px;
-        border-radius: 20px;
-        width: 50%;
-    }
-
-    .contactinfo {
-        text-align: center;
-        font-weight: bold;
-        margin: 10px;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 10px;
-    }
-
-    .input {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 2px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-    }
-
-    .submit {
-        background-color: rgb(124, 138, 111);
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .submit:hover {
-        background-color: rgb(144, 171, 120);
-    }
-</style>
-</head>
-
-<body>
-    {% extends 'base.html' %} {% block body %}
-    <div class="container">
-        <div>
-            <h2>Contact Us</h2>
+{% extends 'base.html' %} {% block body %}
+<div class="container mt-5">
+    <div class="text-center">
+        <h2>Contact Us</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="bg-light p-4 rounded">
+                <form action="#" method="post">
+                    <div class="form-group">
+                        <label for="name">Your Name:</label>
+                        <input class="form-control" type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Your Email Address:</label>
+                        <input class="form-control" type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message:</label>
+                        <textarea class="form-control" id="message" name="message" required></textarea>
+                    </div>
+                    <button class="btn btn-primary btn-block" type="submit">Submit</button>
+                </form>
+            </div>
         </div>
-        <div class="form">
-            <form action="#" method="post">
-                <label for="name">Your Name:</label>
-                <input class="input" type="text" id="name" name="name" required>
-
-                <label for="email">Your Email Address:</label>
-                <input class="input" type="text" id="email" name="email" required>
-
-                <label for="message">Message:</label>
-                <textarea id="message" name="message" required></textarea>
-
-                <input class="submit" type="submit" value="Submit">
-            </form>
-        </div>
-        <div class="contactinfo">
-            <i class="fa-solid fa-phone"></i>
-            <span class="tel">123 456 7890</span>
+        <div class="col-md-6">
+            <div class="bg-light p-4 rounded text-center">
+                <i class="fas fa-phone"></i>
+                <span class="tel">123 456 7890</span>
+            </div>
         </div>
     </div>
-    {% endblock %}
-</body>
+</div>
+{% endblock %}

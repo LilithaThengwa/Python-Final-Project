@@ -1,0 +1,13 @@
+{% extends 'admin-base.html' %} {% block body %}
+<div class="movie-list-container">
+  {% for policy_type in policy_types %}
+  <ul>
+    <li><p>{{policy_type.name}}</p>
+        <form action="{{url_for('admin_bp.show_update_policy_type') }}" method="POST">
+        <input name="PolicyTypeID" type="text" value="{{policy_type.PolicyTypeID}}" hidden />
+        <button type="submit">Update</button>
+      </form>
+    </li>
+  </ul>
+  {% endfor %}
+{% endblock %}
