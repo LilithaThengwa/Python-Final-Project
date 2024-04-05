@@ -8,7 +8,7 @@ from flask_wtf import FlaskForm
 from sqlalchemy import select
 from wtforms import StringField, SubmitField
 from wtforms.validators import InputRequired, Email, Length
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField, DecimalField, DateField, HiddenField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField, DecimalField, DateField, HiddenField, BooleanField, IntegerField
 from wtforms.validators import InputRequired, Length, ValidationError, Email, DataRequired
 from datetime import date
 
@@ -88,6 +88,34 @@ class Policies(db.Model):
     policy_type = db.relationship("PolicyType", back_populates="policies")
     claims = db.relationship("Claims", back_populates="policy")
 
+class LegalInsuranceEstimateForm(FlaskForm):
+    cover_amount = IntegerField("Cover Amount Required", validators=[DataRequired()])
+    cover_type = SelectField("Level of Cover Required", choices=[
+        ("", "Select Cover Level"),
+        ("Basic Coverage", "Basic Coverage"),
+        ("Standard Coverage", "Standard Coverage"),
+        ("Comprehensive Coverage", "Comprehensive Coverage"),
+        ("Customized Coverage", "Customized Coverage")
+    ], validators=[DataRequired()])
+    criminal_record = BooleanField("Criminal record")
+    tried = BooleanField("Have been tried and found not guilty")
+    arrested = BooleanField("Have been arrested or been the subject of criminal investigation")
+    none = BooleanField("Never been arrested or been the subject of criminal investigation")
+    government_official = SelectField("Are you, or any of your close relatives high ranking government officials?", choices=[
+        ("", "Select"),
+        ("Yes", "Yes"),
+        ("No", "No")
+    ], validators=[DataRequired()])
+    age = IntegerField("Age", validators=[DataRequired()])
+    occupation = StringField("Occupation", validators=[DataRequired()])
+    # marital_status = SelectField("Marital status", choices=[
+    #     ("", "Select Marital status"),
+    #     ("Never Married", "Never Married"),
+    #     ("Community of property", "Married in Community of Property"),
+    #     ("Out of community", "Married out of Community of Property"),
+    #     ("Divorced", Divorced")
+    # ], validators=[DataRequired()])
+    submit = SubmitField("Get Estimate")
 class Claims(db.Model):
     __tablename__ = "Claims"
 
@@ -184,9 +212,11 @@ def home():
 
 @app.route("/policy/<id>")
 def policy(id):
+    form = LegalInsuranceEstimateForm()
+    # perform calculations
     policy_type = PolicyType.query.get(id)
     if policy:
-        return render_template("policy.html", policy=policy_type)
+        return render_template("policy.html", policy=policy_type, form=form)
     else:
         return f"Policy not found for ID: {id}", 404 
     

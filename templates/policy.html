@@ -25,12 +25,6 @@
         justify-content: center;
         align-items: baseline;
     }
-    /* .policy {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        justify-content: center;
-        align-items: center;
-    } */
 
     img {
         width: 100%;
@@ -76,42 +70,61 @@
         }
 </style>
 {% extends 'base.html' %} {% block body %}
-<img src="{{ policy.img }}" alt="{{ policy.alt }}">
-<div class="policy-container">
-    <div class="policy">
-        <h3>{{ policy.name }}</h3>
-        <p>{{ policy.description }}</p>
-    </div>
-    <div class="estimate-container">
-        <h3>Get Insurance Estimate</h3>
-        <form action="/submit_estimate" method="post">
-            <div class="form-group">
-                <label for="cover_amount">Cover Amount Required:</label>
-                <input type="number" id="cover_amount" name="cover_amount" required>
-            </div>
-            <div class="form-group">
-                <label for="cover_type">Type of Cover Required:</label>
-                <select id="cover_type" name="cover_type" required>
-                    <option value="">Select Cover Type</option>
-                    <option value="Car Insurance">Car Insurance</option>
-                    <option value="Legal Insurance">Legal Insurance</option>
-                    <option value="Niche Insurance">Niche Insurance</option>
-                    <option value="Health Insurance">Health Insurance</option>
-                    <option value="High Value Insurance">High Value Insurance</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="age">Age:</label>
-                <input type="number" id="age" name="age" required>
-            </div>
-            <div class="form-group">
-                <label for="occupation">Occupation:</label>
-                <input type="text" id="occupation" name="occupation" required>
-            </div>
-            <div>
-                <input class="get-estimate" type="submit" value="Get Estimate">
-            </div>
-        </form>
+<div class="container">
+    <img src="{{ policy.img }}" alt="{{ policy.alt }}">
+    <div class="policy-container">
+        <div class="policy">
+            <h3>{{ policy.name }}</h3>
+            <p>{{ policy.description }}</p>
+        </div>
+        <div class="estimate-container">
+            <h3>Get Insurance Estimate</h3>
+            <form action="/estimate" method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.cover_amount.label }}
+                    {{ form.cover_amount(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.cover_type.label }}
+                    {{ form.cover_type(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label>Which of these apply to you:</label><br>
+                    <div class="form-check">
+                        {{ form.criminal_record(class="form-check-input") }}
+                        {{ form.criminal_record.label(class="form-check-label") }}
+                    </div>
+                    <div class="form-check">
+                        {{ form.tried(class="form-check-input") }}
+                        {{ form.tried.label(class="form-check-label") }}
+                    </div>
+                    <div class="form-check">
+                        {{ form.arrested(class="form-check-input") }}
+                        {{ form.arrested.label(class="form-check-label") }}
+                    </div>
+                    <div class="form-check">
+                        {{ form.none(class="form-check-input") }}
+                        {{ form.none.label(class="form-check-label") }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form.government_official.label }}
+                    {{ form.government_official(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.age.label }}
+                    {{ form.age(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.occupation.label }}
+                    {{ form.occupation(class="form-control") }}
+                </div>
+                <div>
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -53,8 +53,8 @@ def login():
     if form.validate_on_submit():
         customer = Customer.query.filter_by(Username=form.username.data, Password=form.password.data).first()
         if customer:
-            session['CustomerID'] = customer.CustomerID
-            return redirect(url_for("user_bp.customer_dashboard", customer=customer, policies=Policies.query.filter_by(CustomerID=customer.CustomerID).distinct()))
+            session["CustomerID"] = customer.CustomerID
+            return redirect(url_for("user_bp.customer_dashboard", customer=customer, policies=customer.policies))
                            
   
     return render_template("login.html", form=form)
@@ -65,7 +65,7 @@ def show_register_for_policy():
     form.policy_type.choices = [(policy_type.PolicyTypeID, policy_type.name) for policy_type in PolicyType.query.all()]
     customerID = request.form.get("CustomerID")
     customer = Customer.query.get(customerID) 
-    return render_template("register-for-policy.html", form=form, customer=customer, Policies=Policies.query.filter_by(CustomerID=customer.CustomerID))
+    return render_template("register-for-policy.html", form=form, customer=customer, policies=customer.policies)
 
 @user_bp.route("/registerforpolicy/<CustomerID>", methods=["GET","POST"])  
 def register_for_policy(CustomerID):
@@ -101,8 +101,8 @@ def show_file_claim():
     form.Policy.choices = [(policy.PolicyID, policy.ItemInsured) for policy in Policies.query.all()]
     customerID = request.form.get("CustomerID")
     customer = Customer.query.get(customerID) 
-    customer_policies = Policies.query.filter_by(CustomerID=customerID)
-    return render_template("file-claim.html", form=form, customer=customer, Policies=customer_policies)
+    # customer_policies = Policies.query.filter_by(CustomerID=customerID)
+    return render_template("file-claim.html", form=form, customer=customer, policies=customer.policies)
 
 @user_bp.route("/fileclaim/<CustomerID>", methods=["GET", "POST"])
 def file_claim(CustomerID):
@@ -122,11 +122,52 @@ def file_claim(CustomerID):
         try:
             db.session.add(new_claim)
             db.session.commit()
-            return redirect(url_for("user_bp.customer_dashboard", customer=customer, policies=Policies.query.filter_by(CustomerID=customer.CustomerID).distinct()))
+            return redirect(url_for("user_bp.customer_dashboard", customer=customer, policies=customer.policies))
         except Exception as e:
             db.session.rollback()
             return f"<h2>Error: {str(e)}</h2>", 500
     else:
         print(form.errors)
     print("no submit")
-    return render_template("file-claim.html", form=form, customer=customer, policies=Policies.query.filter_by(CustomerID=customer.CustomerID).distinct())
+    return render_template("file-claim.html", form=form, customer=customer, policies=customer.policies)
+
+def calculate_premium(cover_amount, cover_type, criminal_record, tried, arrested, none, government_official, age, occupation):
+    # Base cover amount
+    base_cover_amount = {
+        "Basic Coverage": 40_000,
+        "Standard Coverage": 80_000,
+        "Comprehensive Coverage": 160_000,
+        "Customized Coverage": 60_000
+    }.get(cover_type, 0)
+
+    estimated_cover_amount = base_cover_amount + cover_amount
+
+    premium_rates = {
+        (0, 40_000): 900,
+        (40_001, 80_000): 1900,
+        (80_001, 160_000): 3000,
+        (50_000, 60_000): 1250
+    }
+
+    for (min_amount, max_amount), rate in premium_rates.items():
+        if min_amount <= estimated_cover_amount <= max_amount:
+            premium = rate
+            break
+    else:
+        premium = 5_000
+
+    if criminal_record:
+        premium += 1000
+    if tried:
+        premium += 700
+    if arrested:
+        premium += 500
+    # if government_official == "Yes":
+    #     premium += cannot cover
+
+    if age < 30:
+        premium += 100  
+    elif age >= 60:
+        premium -= 200 
+
+    return premium
