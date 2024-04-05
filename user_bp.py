@@ -131,8 +131,22 @@ def file_claim(CustomerID):
     print("no submit")
     return render_template("file-claim.html", form=form, customer=customer, policies=customer.policies)
 
+@user_bp.route('/get_quote', methods=['POST'])
+def get_quote():
+    cover_type = request.form['cover_type']
+    criminal_record = request.form.get('criminal_record') 
+    tried = request.form.get('tried') 
+    arrested = request.form.get('arrested') 
+    none = request.form.get('none')
+    government_official = request.form['government_official']
+    age = int(request.form['age'])
+    occupation = request.form['occupation']
+
+    premuim = calculate_premium(cover_type, criminal_record, tried, arrested, none, government_official, age, occupation)
+
+    return render_template("quote.html", premuim=premuim)
+
 def calculate_premium(cover_type, criminal_record, tried, arrested, none, government_official, age, occupation):
-    # Base cover amount
     cover_amount = {
         "Basic Coverage": 40_000,
         "Standard Coverage": 80_000,
