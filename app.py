@@ -110,13 +110,13 @@ class LegalInsuranceEstimateForm(FlaskForm):
     ], validators=[DataRequired()])
     age = IntegerField("Age", validators=[DataRequired()])
     occupation = StringField("Occupation", validators=[DataRequired()])
-    # marital_status = SelectField("Marital status", choices=[
-    #     ("", "Select Marital status"),
-    #     ("Never Married", "Never Married"),
-    #     ("Community of property", "Married in Community of Property"),
-    #     ("Out of community", "Married out of Community of Property"),
-    #     ("Divorced", Divorced")
-    # ], validators=[DataRequired()])
+    marital_status = SelectField("Marital status", choices=[
+        ("", "Select Marital status"),
+        ("Never Married", "Never Married"),
+        ("Community of property", "Married in Community of Property"),
+        ("Out of community", "Married out of Community of Property"),
+        ("Divorced", "Divorced")
+    ], validators=[DataRequired()])
     submit = SubmitField("Get Estimate")
 class Claims(db.Model):
     __tablename__ = "Claims"

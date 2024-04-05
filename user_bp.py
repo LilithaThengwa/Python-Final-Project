@@ -131,30 +131,25 @@ def file_claim(CustomerID):
     print("no submit")
     return render_template("file-claim.html", form=form, customer=customer, policies=customer.policies)
 
-def calculate_premium(cover_amount, cover_type, criminal_record, tried, arrested, none, government_official, age, occupation):
+def calculate_premium(cover_type, criminal_record, tried, arrested, none, government_official, age, occupation):
     # Base cover amount
-    base_cover_amount = {
+    cover_amount = {
         "Basic Coverage": 40_000,
         "Standard Coverage": 80_000,
         "Comprehensive Coverage": 160_000,
         "Customized Coverage": 60_000
     }.get(cover_type, 0)
 
-    estimated_cover_amount = base_cover_amount + cover_amount
-
     premium_rates = {
-        (0, 40_000): 900,
-        (40_001, 80_000): 1900,
-        (80_001, 160_000): 3000,
-        (50_000, 60_000): 1250
+        "Basic Coverage": 900,
+        "Standard Coverage": 1900,
+        "Comprehensive Coverage": 3000,
+        "Customized Coverage": 1250
     }
 
-    for (min_amount, max_amount), rate in premium_rates.items():
-        if min_amount <= estimated_cover_amount <= max_amount:
-            premium = rate
-            break
-    else:
-        premium = 5_000
+    premium = 5000
+
+    premium = premium_rates.get(cover_type, 0) 
 
     if criminal_record:
         premium += 1000
@@ -162,8 +157,8 @@ def calculate_premium(cover_amount, cover_type, criminal_record, tried, arrested
         premium += 700
     if arrested:
         premium += 500
-    # if government_official == "Yes":
-    #     premium += cannot cover
+    if government_official == "Yes":
+        return "Unfortunately we cannot provide you with cover."
 
     if age < 30:
         premium += 100  
