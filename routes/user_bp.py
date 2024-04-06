@@ -1,8 +1,70 @@
+from extensions import db
 from flask import flash
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from app import db, Customer, RegistrationForm, LoginForm, Policies, ApplyPolicyForm, PolicyType, Claims, FileClaimForm
+from wtforms.validators import InputRequired, Email, Length
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField, DecimalField, DateField, HiddenField
+from wtforms.validators import InputRequired, Length, ValidationError, DataRequired
+from datetime import date
+from flask_wtf import FlaskForm
+from models.customer import Customer
+from models.policy import Policies
+from models.claim import Claims
+from models.policy_type import PolicyType
+from models.admin import Admin
+from flask_login import login_user, logout_user
+from werkzeug.security import generate_password_hash, check_password_hash
 
 user_bp = Blueprint("user_bp", __name__)
+
+class RegistrationForm(FlaskForm): 
+    FirstName = StringField("First Name", validators=[InputRequired(), Length(min=2)])
+    LastName = StringField("Last Name", validators=[InputRequired(), Length(min=2)])
+    PhoneNumber = StringField("Phone Number", validators=[InputRequired(), Length(min=2)])
+    Username = StringField("Username", validators=[InputRequired(), Length(min=2)])
+    Email = StringField("Email", validators=[InputRequired(), Length(min=2)])
+    Password = PasswordField("Password", validators=[InputRequired(), Length(min=2)])
+    submit = SubmitField("Sign Up")
+
+    def validate_username(self, field):
+        if Customer.query.filter_by(Username=field.data).first():
+           raise ValidationError("Username taken.")
+
+class LoginForm(FlaskForm):
+    username = StringField("Username", validators=[InputRequired(), Length(min=2)])
+    password = PasswordField("Password", validators=[InputRequired(), Length(min=2, max=12)])
+    submit = SubmitField("Log in")
+
+    def validate_username(self, field):
+        if not Customer.query.filter_by(Username=field.data).first():
+            raise ValidationError("Invalid credentials")
+        
+    def validate_password(self, field):
+        customer_from_db =  Customer.query.filter_by(Username=self.username.data).first()
+        if customer_from_db:
+          form_password = field.data
+          user_db_data = customer_from_db.to_dict()
+          if not check_password_hash(user_db_data["Password"], form_password):
+            raise ValidationError("Invalid credentials")
+        # if user_from_db:
+        #   if not Customer.query.filter_by(Username=self.username.data, Password=field.data).first():
+        #     raise ValidationError("Invalid credentials")
+
+class ApplyPolicyForm(FlaskForm):
+    policy_type = SelectField("Policy Type", validators=[DataRequired()])
+    item_insured = StringField("Item Insured", validators=[DataRequired()])
+    insured_value = DecimalField("Insured Value", validators=[DataRequired()])
+    monthly_premium = DecimalField("Monthly Premium", validators=[DataRequired()])
+    date_applied = DateField("Date", validators=[DataRequired()], default=date.today, render_kw={"readonly": True})
+    CustomerID = HiddenField("Customer ID")
+
+class FileClaimForm(FlaskForm):
+    Policy = SelectField("Select a Policy from which to claim", validators=[DataRequired()])
+    date_of_event = DateField("Date of Loss", validators=[DataRequired()])
+    Date_Filed = DateField("Current Date", validators=[DataRequired()], default=date.today, render_kw={"readonly": True})
+    Description = TextAreaField("Description", validators=[DataRequired()])
+    Amount = DecimalField("Amount claiming for", validators=[DataRequired()])
+    CustomerID = HiddenField("Customer ID")
+    submit = SubmitField("Submit")
 
 @user_bp.route("/dashboard")
 def customer_dashboard():
@@ -30,11 +92,15 @@ def register():
     if form.validate_on_submit():
         # if User.query.filter_by(username=form.username.data).first():
         #     return render_template("register.html", form=form)
-        # new_customer = Customer(Username=form.username.data, Password=form.password.data)
+        password_hash = generate_password_hash(form.Password.data)
         new_customer = Customer()
         for key, value in request.form.items():
             if hasattr(new_customer, key):
-                setattr(new_customer, key, value)
+                if key == "Password":
+                 setattr(new_customer, key, password_hash)
+                else:
+                 setattr(new_customer, key, value)
+
         try:
           db.session.add(new_customer)
           db.session.commit()
@@ -51,13 +117,25 @@ def login():
     form = LoginForm()
     
     if form.validate_on_submit():
-        customer = Customer.query.filter_by(Username=form.username.data, Password=form.password.data).first()
+        customer = Customer.query.filter_by(Username=form.username.data).first()
+        print("start")
+        print(customer.FirstName)
         if customer:
+            login_user(customer)
+            flash('You were successfully logged in')
             session["CustomerID"] = customer.CustomerID
-            return redirect(url_for("user_bp.customer_dashboard", customer=customer, policies=customer.policies))
+            if customer.role == "user":
+                    return redirect(url_for("user_bp.customer_dashboard", customer=customer, policies=customer.policies))
+            elif customer.role == "admin":
+               
+                return redirect(url_for("admin_bp.admin_dashboard"))
                            
-  
     return render_template("login.html", form=form)
+
+@user_bp.route("/logout", methods=["GET", "POST"])
+def logout():
+    logout_user()
+    return redirect(url_for("user_bp.login"))
 
 @user_bp.route("/registerforpolicy", methods=["POST"])  
 def show_register_for_policy():

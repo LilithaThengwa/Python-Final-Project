@@ -1,7 +1,33 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for
-from app import db, Customer, Policies, PolicyType, UpdateCustomerForm,  UpdatePolicyTypeForm, Claims
+from extensions import db
+from flask import flash
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from wtforms.validators import InputRequired, Email, Length
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from wtforms.validators import InputRequired, Length, ValidationError, DataRequired
+from datetime import date
+from flask_wtf import FlaskForm
+from models.customer import Customer
+from models.policy import Policies
+from models.claim import Claims
+from models.policy_type import PolicyType
 
 admin_bp = Blueprint("admin_bp", __name__)
+
+class UpdateCustomerForm(FlaskForm):
+    FirstName = StringField("First Name", validators=[InputRequired(), Length(max=50)])
+    LastName = StringField("Last Name", validators=[InputRequired(), Length(max=50)])
+    Email = StringField("Email", validators=[InputRequired(), Email(), Length(max=50)])
+    PhoneNumber = StringField("Phone Number", validators=[InputRequired(), Length(max=20)])
+    submit = SubmitField("Update")
+
+class UpdatePolicyTypeForm(FlaskForm):
+    name = StringField("Name", validators=[InputRequired(), Length(max=50)])
+    description = TextAreaField("Description", validators=[InputRequired(), Length(max=255)])
+    short_description = TextAreaField("Short Description", validators=[InputRequired(), Length(max=255)])
+    img = StringField("Image URL", validators=[InputRequired(), Length(max=255)])
+    alt = StringField("Alt Text", validators=[InputRequired(), Length(max=50)])
+    submit = SubmitField("Update")
+
 
 @admin_bp.route("/")
 def admin_dashboard():
