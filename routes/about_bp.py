@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template
-from app import db, Customer, RegistrationForm, LoginForm
 
 about_bp = Blueprint("about_bp", __name__)
 

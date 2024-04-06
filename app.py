@@ -229,9 +229,9 @@ def quote():
 if __name__ == "__main__":
     app.run(debug = True)
 
-from about_bp import about_bp
-from user_bp import user_bp
-from admin_bp import admin_bp
+from routes.about_bp import about_bp
+from routes.user_bp import user_bp
+from routes.admin_bp import admin_bp
 
 app.register_blueprint(about_bp, url_prefix="/about")
 app.register_blueprint(user_bp, url_prefix="/user")

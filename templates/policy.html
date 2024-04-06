@@ -79,7 +79,7 @@
         </div>
         <div class="estimate-container">
             <h3>Get Insurance Estimate</h3>
-            <form action="{{ url_for('user_bp.get_quote')}}"  method="post">
+            <form action="{{ url_for('user_bp.get_quote')}}" method="post">
                 {{ form.hidden_tag() }}
                 <div class="form-group">
                     {{ form.cover_type.label }}
