@@ -1,14 +1,64 @@
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        margin: 70px auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    h3 {
+        text-align: center;
+    }
+
+    .update-form {
+        background-color: #f2f2f2;
+        padding: 20px;
+        border-radius: 20px;
+        width: 50%;
+    }
+
+    a {
+        text-decoration: none;
+    }
+</style>
 {% extends 'base.html' %} {% block body %}
-<h3>To file a claim, {{customer.FirstName}}, please fill in the below</h3>
-    <form action="{{ url_for('user_bp.file_claim', CustomerID=customer.CustomerID) }}" method="POST">
+<div class="container">
+    <h3>To file a claim, {{customer.FirstName}}, please fill in the below</h3>
+    <form class="update-form" action="{{ url_for('user_bp.file_claim', CustomerID=customer.CustomerID) }}" method="POST">
         {{ form.hidden_tag() }}
 
-        {{ form.Policy.label }} {{ form.Policy() }}
-        {{ form.date_of_event.label }} {{ form.date_of_event() }}
-        {{ form.Description.label }} {{ form.Description() }}
-        {{ form.Amount.label }} {{ form.Amount() }}
-        {{ form.Date_Filed.label }} {{ form.Date_Filed() }}
+        <div class="form-group">
+            {{ form.Policy.label }}
+            {{ form.Policy(class="form-control") }}
+        </div>
 
-        <button type="submit">File claim</button>
+        <div class="form-group">
+            {{ form.date_of_event.label }}
+            {{ form.date_of_event(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.Description.label }}
+            {{ form.Description(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.Amount.label }}
+            {{ form.Amount(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.Date_Filed.label }}
+            {{ form.Date_Filed(class="form-control") }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">File claim</button>
     </form>
+</div>
 {% endblock %}

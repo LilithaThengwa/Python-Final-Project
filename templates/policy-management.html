@@ -1,13 +1,35 @@
-{% extends 'admin-base.html' %} {% block body %}
-<div class="movie-list-container">
-  {% for policy_type in policy_types %}
-  <ul>
-    <li><p>{{policy_type.name}}</p>
-        <form action="{{url_for('admin_bp.show_update_policy_type') }}" method="POST">
-        <input name="PolicyTypeID" type="text" value="{{policy_type.PolicyTypeID}}" hidden />
-        <button type="submit">Update</button>
-      </form>
-    </li>
-  </ul>
-  {% endfor %}
+{% extends 'base.html' %} {% block body %}
+
+<h3 class="text-center m-3">Policies</h3>
+<div class="mr-2 ml-2">
+  <table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        <th>Policy Name</th>
+        <th>Policy Description</th>
+        <th>Short Description</th>
+        <th>Image URL</th>
+        <th>Image Alt</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for policy_type in policy_types %}
+      <tr>
+        <td>{{ policy_type.name }}</td>
+        <td>{{ policy_type.description }}</td>
+        <td>{{ policy_type.short_description }}</td>
+        <td>{{ policy_type.img }}</td>
+        <td>{{ policy_type.alt }}</td>
+        <td>
+          <form action="{{url_for('admin_bp.show_update_policy_type') }}" method="POST">
+            <input name="PolicyTypeID" type="text" value="{{policy_type.PolicyTypeID}}" hidden />
+            <button type="submit" class="btn btn-secondary Update">Update</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

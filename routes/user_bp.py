@@ -10,8 +10,7 @@ from models.customer import Customer
 from models.policy import Policies
 from models.claim import Claims
 from models.policy_type import PolicyType
-from models.admin import Admin
-from flask_login import login_user, logout_user
+from flask_login import login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 user_bp = Blueprint("user_bp", __name__)
@@ -51,9 +50,8 @@ class LoginForm(FlaskForm):
 
 class ApplyPolicyForm(FlaskForm):
     policy_type = SelectField("Policy Type", validators=[DataRequired()])
-    item_insured = StringField("Item Insured", validators=[DataRequired()])
-    insured_value = DecimalField("Insured Value", validators=[DataRequired()])
-    monthly_premium = DecimalField("Monthly Premium", validators=[DataRequired()])
+    item_insured = StringField("Item to be Insured", validators=[DataRequired()])
+    insured_value = StringField("Insured Value", validators=[DataRequired()])
     date_applied = DateField("Date", validators=[DataRequired()], default=date.today, render_kw={"readonly": True})
     CustomerID = HiddenField("Customer ID")
 
@@ -67,6 +65,7 @@ class FileClaimForm(FlaskForm):
     submit = SubmitField("Submit")
 
 @user_bp.route("/dashboard")
+@login_required
 def customer_dashboard():
     customer_id = session.get("CustomerID")
     if not customer_id:
@@ -76,19 +75,13 @@ def customer_dashboard():
     if not customer:
         return "Customer not found", 404
 
-    # customer_policies = Policies.query.filter_by(CustomerID=customer_id).all()
-    # customer_claims = Claims.query.filter_by(CustomerID=customer_id).all()
-    print(customer.policies)
-
     return render_template("customerdashboard.html", customer=customer, policies=customer.policies, claims=customer.claims)
-                           
 
 @user_bp.route("/register", methods=["GET","POST"])
 def register():
     #GET and POST
     form = RegistrationForm()
     
-    #only when POST
     if form.validate_on_submit():
         # if User.query.filter_by(username=form.username.data).first():
         #     return render_template("register.html", form=form)
@@ -104,12 +97,12 @@ def register():
         try:
           db.session.add(new_customer)
           db.session.commit()
-          return render_template("customerdashboard.html", customer=new_customer)
+          flash("You're all sign up. Please log in below.")
+          return redirect(url_for("user_bp.login"))
         except Exception as e:
             db.session.rollback()
             return f"<h2>error{str(e)}</h2>", 500
 
-    # only GET
     return render_template("register.html", form=form)
 
 @user_bp.route("/login", methods=["GET","POST"])
@@ -118,26 +111,27 @@ def login():
     
     if form.validate_on_submit():
         customer = Customer.query.filter_by(Username=form.username.data).first()
-        print("start")
-        print(customer.FirstName)
         if customer:
             login_user(customer)
             flash('You were successfully logged in')
             session["CustomerID"] = customer.CustomerID
+            session["user_role"] = customer.role
             if customer.role == "user":
                     return redirect(url_for("user_bp.customer_dashboard", customer=customer, policies=customer.policies))
             elif customer.role == "admin":
-               
                 return redirect(url_for("admin_bp.admin_dashboard"))
                            
     return render_template("login.html", form=form)
 
 @user_bp.route("/logout", methods=["GET", "POST"])
+@login_required
 def logout():
     logout_user()
+    print()
     return redirect(url_for("user_bp.login"))
 
 @user_bp.route("/registerforpolicy", methods=["POST"])  
+@login_required
 def show_register_for_policy():
     form = ApplyPolicyForm()
     form.policy_type.choices = [(policy_type.PolicyTypeID, policy_type.name) for policy_type in PolicyType.query.all()]
@@ -159,7 +153,7 @@ def register_for_policy(CustomerID):
         new_policy.policy_type = policy_type
         new_policy.ItemInsured = form.item_insured.data
         new_policy.InsuredValue = form.insured_value.data
-        new_policy.MonthlyPremium = form.monthly_premium.data
+        new_policy.MonthlyPremium = int(form.insured_value.data) * 0.1
         new_policy.DateTakenOut = form.date_applied.data
         new_policy.DateActive = form.date_applied.data #change later
         
@@ -183,6 +177,7 @@ def show_file_claim():
     return render_template("file-claim.html", form=form, customer=customer, policies=customer.policies)
 
 @user_bp.route("/fileclaim/<CustomerID>", methods=["GET", "POST"])
+@login_required
 def file_claim(CustomerID):
     form = FileClaimForm()
     customer_policies = Policies.query.filter_by(CustomerID=CustomerID).all() 
@@ -208,6 +203,32 @@ def file_claim(CustomerID):
         print(form.errors)
     print("no submit")
     return render_template("file-claim.html", form=form, customer=customer, policies=customer.policies)
+
+@user_bp.route("/mypolicies", methods=["GET", "POST"])
+@login_required
+def customer_policies():
+    customer_id = session.get("CustomerID")
+    if not customer_id:
+        return redirect(url_for("user_bp.login"))
+
+    customer = Customer.query.get(customer_id)
+    return render_template("view-policies.html", customer=customer, policies=customer.policies)
+
+
+@user_bp.route("/mypolicies/delete", methods=["POST"])
+@login_required
+def delete_policy_by_id():
+    policy = Policies.query.get(request.form.get("PolicyID"))
+    if not policy:
+        return "policy not found", 404
+    try:
+        db.session.delete(policy)
+        db.session.commit()
+        return f"<h2>{policy.to_dict()['name']} deleted successfully</h2>"
+    except Exception as e:
+        db.session.rollback()
+        return f"<h2>error: {str(e)}</h2>", 500
+
 
 @user_bp.route("/get_quote", methods=["POST"])
 def get_quote():

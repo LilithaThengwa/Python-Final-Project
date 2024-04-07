@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session
 from dotenv import load_dotenv
 import os
 from flask_wtf import FlaskForm
@@ -16,7 +16,7 @@ login_manager = LoginManager()
 app = Flask(__name__)
 
 load_dotenv()
-connection_string = os.environ.get("AZURE_DATABASE_URL")
+connection_string = os.environ.get("LOCAL_DATABASE_URL")
 
 app.config["SECRET_KEY"] = os.environ.get("FORM_SECRET_KEY")
 print(os.environ.get("FORM_SECRET_KEY"))
@@ -64,6 +64,11 @@ class LegalInsuranceEstimateForm(FlaskForm):
 def inject_items():
     items = [policy for policy in PolicyType.query.all()] 
     return dict(nav_dopdown_items=items)
+
+@app.context_processor
+def inject_user_role():
+    user_role = session.get("user_role")
+    return dict(user_role=user_role)
 
 @app.route("/")
 def home():

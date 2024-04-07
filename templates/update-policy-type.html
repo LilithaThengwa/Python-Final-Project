@@ -16,91 +16,55 @@
         text-align: center;
     }
 
-    form {
+    .update-form {
         background-color: #f2f2f2;
         padding: 20px;
         border-radius: 20px;
         width: 50%;
     }
-
-    .input {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 2px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-    }
-
-    input[type="submit"] {
-        background-color: rgb(124, 138, 111);
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    input[type="submit"]:hover {
-        background-color: rgb(144, 171, 120);
-    }
-
-    .Forgotpass {
-        margin-top: 0px;
-    }
-
-    a {
-        text-decoration: none;
-    }
-
-    .signup {
-        text-align: center;
-        margin-bottom: 0px;
-    }
 </style>
-{% extends 'admin-base.html' %} {% block body %}
+{% extends 'base.html' %} {% block body %}
 <div class="container">
     <h2 class="mb-4">Update Policy Type</h2>
-<form action="{{ url_for('admin_bp.update_policy_info', PolicyTypeID=policy_type.PolicyTypeID) }}" method="POST">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-        {{ form.name.label(class="form-control-label") }}
-        {{ form.name(class="form-control", value=form.name.data) }}
-        {% for error in form.name.errors %}
+    <form class="update-form"
+        action="{{ url_for('admin_bp.update_policy_info', PolicyTypeID=policy_type.PolicyTypeID) }}" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.name.label(class="form-control-label") }}
+            {{ form.name(class="form-control", value=form.name.data) }}
+            {% for error in form.name.errors %}
             <small class="form-text text-danger">{{ error }}</small>
-        {% endfor %}
-    </div>
-    <div class="form-group">
-        {{ form.description.label(class="form-control-label") }}
-        {{ form.description(class="form-control", value=form.description.data) }}
-        {% for error in form.description.errors %}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.description.label(class="form-control-label") }}
+            {{ form.description(class="form-control", value=form.description.data) }}
+            {% for error in form.description.errors %}
             <small class="form-text text-danger">{{ error }}</small>
-        {% endfor %}
-    </div>
-    <div class="form-group">
-        {{ form.short_description.label(class="form-control-label") }}
-        {{ form.short_description(class="form-control", value=form.short_description.data) }}
-        {% for error in form.short_description.errors %}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.short_description.label(class="form-control-label") }}
+            {{ form.short_description(class="form-control", value=form.short_description.data) }}
+            {% for error in form.short_description.errors %}
             <small class="form-text text-danger">{{ error }}</small>
-        {% endfor %}
-    </div>
-    <div class="form-group">
-        {{ form.img.label(class="form-control-label") }}
-        {{ form.img(class="form-control", value=form.img.data) }}
-        {% for error in form.img.errors %}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.img.label(class="form-control-label") }}
+            {{ form.img(class="form-control", value=form.img.data) }}
+            {% for error in form.img.errors %}
             <small class="form-text text-danger">{{ error }}</small>
-        {% endfor %}
-    </div>
-    <div class="form-group">
-        {{ form.alt.label(class="form-control-label") }}
-        {{ form.alt(class="form-control", value=form.alt.data) }}
-        {% for error in form.alt.errors %}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.alt.label(class="form-control-label") }}
+            {{ form.alt(class="form-control", value=form.alt.data) }}
+            {% for error in form.alt.errors %}
             <small class="form-text text-danger">{{ error }}</small>
-        {% endfor %}
-    </div>
-    <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
-</form>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
+    </form>
 </div>
 {% endblock %}
