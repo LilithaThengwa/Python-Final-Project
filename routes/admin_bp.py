@@ -1,7 +1,7 @@
-from flask_login import login_required
+from flask_login import current_user, login_required
 from sqlalchemy import func
 from extensions import db
-from flask import flash
+from flask import flash, session
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from wtforms.validators import InputRequired, Email, Length
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField
@@ -59,7 +59,6 @@ def policy_list():
 
 @admin_bp.route("/update-customer", methods=["POST"])
 @login_required
-@role_required("admin")
 def show_update_customer():
     customerID = request.form.get("CustomerID")
 
@@ -88,7 +87,8 @@ def update_customer_info(CustomerID):
         try:
             db.session.commit()
             flash(f"{customer.FirstName} {customer.LastName} information updated successfully")
-            if customer.role == "admin":
+            if current_user.role == "admin":
+               print("proper")
                return redirect(url_for("admin_bp.customer_list")), 200
             return redirect(url_for("user_bp.customer_dashboard")), 200
         except Exception as e:
@@ -138,7 +138,6 @@ def update_policy_info(PolicyTypeID):
             flash({"error": str(e)})
             return render_template("update-policy-type.html", policy_type=policy_type, form=form), 500
 
-    # If the form is not submitted or not valid, render the update-customer.html template with the prepopulated form
     return render_template("update-policy-type.html", policy_type=policy_type, form=form)
 
 @admin_bp.route("/claims")

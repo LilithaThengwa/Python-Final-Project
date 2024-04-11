@@ -1,65 +1,55 @@
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
-    .container {
-        margin: 70px auto;
-        display: grid;
-        grid-template-columns: 1fr;
-        justify-items: center;
-    }
-    
-    .apply-form {
-        background-color: #f2f2f2;
-        padding: 20px;
-        border-radius: 20px;
-        width: 50%;
-    }
-
     a {
         text-decoration: none;
     }
 </style>
 {% extends 'base.html' %} {% block body %}
-<div class="container">
-    <h3>To Apply for a policy, {{ customer.FirstName }}, please fill in the below</h3>
-    <form class="apply-form" action="{{ url_for('user_bp.register_for_policy', CustomerID=customer.CustomerID) }}" method="POST">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-            {{form.policy_type.label}}
-            {{form.policy_type(class="form-control")}}
-        </div>
+<div class="container mt-5 mb-3">
+    <div class="text-center">
+        <h3>To Apply for a policy, {{ customer.FirstName }}, please fill in the below</h3>
+    </div>
+    <div class="row">
+        <div class="col-md">
+            <div class="bg-light p-4 rounded">
+                <form class="apply-form"
+                    action="{{ url_for('user_bp.register_for_policy', CustomerID=customer.CustomerID) }}" method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{form.policy_type.label}}
+                        {{form.policy_type(class="form-control")}}
+                    </div>
 
-        <div class="form-group">
-            {{form.item_insured.label}}
-            {{form.item_insured(class="form-control")}}
-        </div>
+                    <div class="form-group">
+                        {{form.item_insured.label}}
+                        {{form.item_insured(class="form-control")}}
+                    </div>
 
-        <div class="form-group">
-            {{form.insured_value.label}}
-            {{form.insured_value(class="form-control")}}
-        </div>
+                    <div class="form-group">
+                        {{form.insured_value.label}}
+                        {{form.insured_value(class="form-control")}}
+                    </div>
 
-        <div class="form-group">
-            {{form.date_applied.label}}
-            {{form.date_applied(class="form-control")}}
-        </div>
+                    <div class="form-group">
+                        {{form.date_applied.label}}
+                        {{form.date_applied(class="form-control")}}
+                    </div>
 
-        <div class="form-group row">
-            <label for="status" class="col-sm-3 col-form-label">Status:</label>
-            <div class="col-sm-9">
-                <input type="text" id="status" name="status" value="Pending application" readonly class="form-control">
+                    <div class="form-group row">
+                        <label for="status" class="col-sm-3 col-form-label">Status:</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="status" name="status" value="Pending application" readonly
+                                class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-primary">Apply</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-
-        <div class="form-group row">
-            <div class="col-sm-12">
-                <button type="submit" class="btn btn-primary">Apply</button>
-            </div>
-        </div>
-    </form>
+    </div>
 </div>
 {% endblock %}

@@ -3,7 +3,7 @@ from extensions import db
 from flask import flash
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from wtforms.validators import InputRequired, Email, Length
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField, DecimalField, DateField, HiddenField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField, DecimalField, DateField, HiddenField, FloatField, IntegerField
 from wtforms.validators import InputRequired, Length, ValidationError, DataRequired
 from datetime import date
 from flask_wtf import FlaskForm
@@ -64,6 +64,13 @@ class FileClaimForm(FlaskForm):
     Amount = DecimalField("Amount claiming for", validators=[DataRequired()])
     CustomerID = HiddenField("Customer ID")
     submit = SubmitField("Submit")
+
+class InsuranceQuoteForm(FlaskForm):
+    item_covered = StringField("Item to be covered", validators=[DataRequired()])
+    age = FloatField("Age of item", validators=[DataRequired()])
+    estimated_value = StringField("How much is your item worth", validators=[DataRequired()])
+    cover_amount = IntegerField("Cover Amount Required", validators=[DataRequired()])
+    submit = SubmitField("Get Quote")
 
 @user_bp.route("/dashboard")
 @login_required
@@ -251,20 +258,6 @@ def complete_quote():
 
     return render_template("complete-quote.html", premuim=premuim)
 
-# @user_bp.route("/get_quote", methods=["POST"])
-# def get_quote():
-#     form = Qu
-#     cover_type = request.form["cover_type"]
-#     criminal_record = request.form.get("criminal_record")
-#     tried = request.form.get("tried")
-#     arrested = request.form.get("arrested")
-#     none = request.form.get("none")
-#     government_official = request.form["government_official"]
-#     age = int(request.form["age"])
-#     occupation = request.form["occupation"]
-
-#     return render_template("quote.html")
-
 def calculate_premium(cover_type, criminal_record, tried, arrested, none, government_official, age, occupation):
     cover_amount_limits = {
         "Basic Coverage": 40_000,
@@ -301,7 +294,6 @@ def calculate_premium(cover_type, criminal_record, tried, arrested, none, govern
 
     return premium
 
-# Custom decorator to restrict access by role
 def role_required(role):
     def decorator(view_func):
         @wraps(view_func)
