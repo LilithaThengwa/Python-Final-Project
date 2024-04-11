@@ -1,3 +1,4 @@
+from functools import wraps
 from extensions import db
 from flask import flash
 from flask import Blueprint, render_template, request, redirect, url_for, session
@@ -10,7 +11,7 @@ from models.customer import Customer
 from models.policy import Policies
 from models.claim import Claims
 from models.policy_type import PolicyType
-from flask_login import login_required, login_user, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 user_bp = Blueprint("user_bp", __name__)
@@ -73,7 +74,7 @@ def customer_dashboard():
 
     customer = Customer.query.get(customer_id)
     if not customer:
-        return "Customer not found", 404
+        return redirect(url_for("user_bp.login"))
 
     return render_template("customerdashboard.html", customer=customer, policies=customer.policies, claims=customer.claims)
 
@@ -85,6 +86,7 @@ def register():
     if form.validate_on_submit():
         # if User.query.filter_by(username=form.username.data).first():
         #     return render_template("register.html", form=form)
+        print(form.errors)
         password_hash = generate_password_hash(form.Password.data)
         new_customer = Customer()
         for key, value in request.form.items():
@@ -97,11 +99,12 @@ def register():
         try:
           db.session.add(new_customer)
           db.session.commit()
-          flash("You're all sign up. Please log in below.")
+          flash("You're all signed up. Please log in below.")
           return redirect(url_for("user_bp.login"))
         except Exception as e:
             db.session.rollback()
-            return f"<h2>error{str(e)}</h2>", 500
+            flash(f"Sign up failed. error: {str(e)}")
+            redirect(url_for("user_bp.register")), 500
 
     return render_template("register.html", form=form)
 
@@ -127,7 +130,8 @@ def login():
 @login_required
 def logout():
     logout_user()
-    print()
+    session.pop("user_role", None)
+    flash("Log out successful")
     return redirect(url_for("user_bp.login"))
 
 @user_bp.route("/registerforpolicy", methods=["POST"])  
@@ -153,27 +157,28 @@ def register_for_policy(CustomerID):
         new_policy.policy_type = policy_type
         new_policy.ItemInsured = form.item_insured.data
         new_policy.InsuredValue = form.insured_value.data
-        new_policy.MonthlyPremium = int(form.insured_value.data) * 0.1
+        new_policy.MonthlyPremium = int(form.insured_value.data) * 0.01
         new_policy.DateTakenOut = form.date_applied.data
         new_policy.DateActive = form.date_applied.data #change later
         
         try:
           db.session.add(new_policy)
           db.session.commit()
-          return render_template("customerdashboard.html", customer=customer, policies=Policies.query.filter_by(CustomerID=customer.CustomerID).distinct())
+          flash("Policy application submitted.We'll be in touch shortly")
+          return redirect(url_for("user_bp.customer_dashboard"))
         except Exception as e:
             db.session.rollback()
-            return f"<h2>error{str(e)}</h2>", 500
-    return render_template("register-for-policy.html", form=form, customer=customer, policies=Policies.query.filter_by(CustomerID=customer.CustomerID).distinct(), 
-                           claims=Claims.query.filter_by(CustomerID=customer.CustomerID).distinct())
+            flash(f"Policy application failed to submit. Error{str(e)}."), 500
+            return redirect(url_for("user_bp.register_for_policy"))
+
+    return render_template("register-for-policy.html", form=form, customer=customer, policies=customer.policies, claims=customer.claims)
 
 @user_bp.route("/fileclaim", methods=["POST"])  
 def show_file_claim():
     form =FileClaimForm()
-    form.Policy.choices = [(policy.PolicyID, policy.ItemInsured) for policy in Policies.query.all()]
     customerID = request.form.get("CustomerID")
     customer = Customer.query.get(customerID) 
-    # customer_policies = Policies.query.filter_by(CustomerID=customerID)
+    form.Policy.choices = [(policy.PolicyID, policy.ItemInsured) for policy in customer.policies]
     return render_template("file-claim.html", form=form, customer=customer, policies=customer.policies)
 
 @user_bp.route("/fileclaim/<CustomerID>", methods=["GET", "POST"])
@@ -183,8 +188,8 @@ def file_claim(CustomerID):
     customer_policies = Policies.query.filter_by(CustomerID=CustomerID).all() 
     form.Policy.choices = [(policy.PolicyID, policy.ItemInsured) for policy in customer_policies]
     customer = Customer.query.get(CustomerID)
+
     if form.validate_on_submit():
-        print("submit success")
         new_claim = Claims(
             CustomerID=CustomerID,
             PolicyID=form.Policy.data,
@@ -195,13 +200,13 @@ def file_claim(CustomerID):
         try:
             db.session.add(new_claim)
             db.session.commit()
+            flash("Claim submission successful. Processing will begin soon.")
             return redirect(url_for("user_bp.customer_dashboard", customer=customer, policies=customer.policies))
         except Exception as e:
             db.session.rollback()
-            return f"<h2>Error: {str(e)}</h2>", 500
-    else:
-        print(form.errors)
-    print("no submit")
+            flash(f"Policy application failed to submit. Error{str(e)}."), 500
+            return redirect(url_for("user_bp.file_claim"))
+        
     return render_template("file-claim.html", form=form, customer=customer, policies=customer.policies)
 
 @user_bp.route("/mypolicies", methods=["GET", "POST"])
@@ -209,11 +214,11 @@ def file_claim(CustomerID):
 def customer_policies():
     customer_id = session.get("CustomerID")
     if not customer_id:
+        flash("Please log in.")
         return redirect(url_for("user_bp.login"))
 
     customer = Customer.query.get(customer_id)
     return render_template("view-policies.html", customer=customer, policies=customer.policies)
-
 
 @user_bp.route("/mypolicies/delete", methods=["POST"])
 @login_required
@@ -224,14 +229,15 @@ def delete_policy_by_id():
     try:
         db.session.delete(policy)
         db.session.commit()
-        return f"<h2>{policy.to_dict()['name']} deleted successfully</h2>"
+        flash(f"{policy.ItemInsured} deleted successfully.")
+        return redirect(url_for("user_bp.customer_policies"))
     except Exception as e:
         db.session.rollback()
-        return f"<h2>error: {str(e)}</h2>", 500
+        flash(f"Policy removal failed. Error{str(e)}."), 500
+        return redirect(url_for("user_bp.customer_policies"))
 
-
-@user_bp.route("/get_quote", methods=["POST"])
-def get_quote():
+@user_bp.route("/complete_quote", methods=["POST"])
+def complete_quote():
     cover_type = request.form["cover_type"]
     criminal_record = request.form.get("criminal_record")
     tried = request.form.get("tried")
@@ -243,7 +249,21 @@ def get_quote():
 
     premuim = calculate_premium(cover_type, criminal_record, tried, arrested, none, government_official, age, occupation)
 
-    return render_template("quote.html", premuim=premuim)
+    return render_template("complete-quote.html", premuim=premuim)
+
+# @user_bp.route("/get_quote", methods=["POST"])
+# def get_quote():
+#     form = Qu
+#     cover_type = request.form["cover_type"]
+#     criminal_record = request.form.get("criminal_record")
+#     tried = request.form.get("tried")
+#     arrested = request.form.get("arrested")
+#     none = request.form.get("none")
+#     government_official = request.form["government_official"]
+#     age = int(request.form["age"])
+#     occupation = request.form["occupation"]
+
+#     return render_template("quote.html")
 
 def calculate_premium(cover_type, criminal_record, tried, arrested, none, government_official, age, occupation):
     cover_amount_limits = {
@@ -280,3 +300,15 @@ def calculate_premium(cover_type, criminal_record, tried, arrested, none, govern
         premium -= 200 
 
     return premium
+
+# Custom decorator to restrict access by role
+def role_required(role):
+    def decorator(view_func):
+        @wraps(view_func)
+        def wrapper(*args, **kwargs):
+            if current_user.role != role:
+                flash("Can't let you go there.")
+                return redirect(url_for("home")), 403
+            return view_func(*args, **kwargs)
+        return wrapper
+    return decorator

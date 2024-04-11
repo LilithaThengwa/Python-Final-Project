@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 import os
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-from wtforms.validators import InputRequired, Email, Length
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField, DecimalField, DateField, HiddenField, BooleanField, IntegerField
 from wtforms.validators import InputRequired, Length, ValidationError, Email, DataRequired
 from datetime import date
@@ -80,7 +79,6 @@ def home():
 @app.route("/policy/<id>")
 def policy(id):
     form = LegalInsuranceEstimateForm()
-    # perform calculations
     policy_type = PolicyType.query.get(id)
     if policy:
         return render_template("policy.html", policy=policy_type, form=form)
@@ -97,10 +95,12 @@ if __name__ == "__main__":
 from routes.about_bp import about_bp
 from routes.user_bp import user_bp
 from routes.admin_bp import admin_bp
+from routes.main_bp import main_bp
 
 app.register_blueprint(about_bp, url_prefix="/about")
 app.register_blueprint(user_bp, url_prefix="/user")
 app.register_blueprint(admin_bp, url_prefix="/admin")
+app.register_blueprint(main_bp, url_prefix="/main")
 
 # try:
 #     with app.app_context():

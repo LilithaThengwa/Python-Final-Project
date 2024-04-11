@@ -1,4 +1,5 @@
 from flask_login import login_required
+from sqlalchemy import func
 from extensions import db
 from flask import flash
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
@@ -15,6 +16,8 @@ import matplotlib.pyplot as plt
 import io
 import base64
 
+from routes.user_bp import role_required
+
 admin_bp = Blueprint("admin_bp", __name__)
 
 class UpdateCustomerForm(FlaskForm):
@@ -26,8 +29,8 @@ class UpdateCustomerForm(FlaskForm):
 
 class UpdatePolicyTypeForm(FlaskForm):
     name = StringField("Name", validators=[InputRequired(), Length(max=50)])
-    description = TextAreaField("Description", validators=[InputRequired(), Length(max=255)])
-    short_description = TextAreaField("Short Description", validators=[InputRequired(), Length(max=255)])
+    description = TextAreaField("Description", validators=[InputRequired(), Length(max=500)])
+    short_description = TextAreaField("Short Description", validators=[InputRequired(), Length(max=500)])
     img = StringField("Image URL", validators=[InputRequired(), Length(max=255)])
     alt = StringField("Alt Text", validators=[InputRequired(), Length(max=50)])
     submit = SubmitField("Update")
@@ -35,22 +38,28 @@ class UpdatePolicyTypeForm(FlaskForm):
 
 @admin_bp.route("/")
 @login_required
+@role_required("admin")
 def admin_dashboard():
-    chart_data = generate_chart()
-    return render_template("admindashboard.html", chart_data=chart_data)
+    # chart_data = generate_chart()
+    bar_chart = policies_per_policy_type()
+    line_chart = policies_per_policy_type_line()
+    return render_template("admindashboard.html", bar_chart=bar_chart, line_chart=line_chart)
 
 @admin_bp.route("/customers")
 @login_required
+@role_required("admin")
 def customer_list():
     return render_template("customer-management.html", customers=Customer.query.all())
 
 @admin_bp.route("/policies")
 @login_required
+@role_required("admin")
 def policy_list():
     return render_template("policy-management.html", customers=Customer.query.all(), policy_types=PolicyType.query.all())
 
 @admin_bp.route("/update-customer", methods=["POST"])
 @login_required
+@role_required("admin")
 def show_update_customer():
     customerID = request.form.get("CustomerID")
 
@@ -79,7 +88,9 @@ def update_customer_info(CustomerID):
         try:
             db.session.commit()
             flash(f"{customer.FirstName} {customer.LastName} information updated successfully")
-            return redirect(url_for("admin_bp.customer_list")), 200
+            if customer.role == "admin":
+               return redirect(url_for("admin_bp.customer_list")), 200
+            return redirect(url_for("user_bp.customer_dashboard")), 200
         except Exception as e:
             db.session.rollback()
             flash({"error": str(e)})
@@ -89,6 +100,7 @@ def update_customer_info(CustomerID):
 
 @admin_bp.route("/update-policy-type", methods=["POST"])
 @login_required
+@role_required("admin")
 def show_update_policy_type():
     policyTypeID = request.form.get("PolicyTypeID")
 
@@ -101,6 +113,7 @@ def show_update_policy_type():
 
 @admin_bp.route("/update-policy-type/<PolicyTypeID>", methods=["GET", "POST"])
 @login_required
+@role_required("admin")
 def update_policy_info(PolicyTypeID):
     policy_type = PolicyType.query.get(PolicyTypeID)
     print(policy_type)
@@ -122,51 +135,92 @@ def update_policy_info(PolicyTypeID):
             return redirect(url_for("admin_bp.policy_list")), 200
         except Exception as e:
             db.session.rollback()
-            # flash({"error": str(e)})
-            # return render_template("update-policy-type.html", policy_type=policy_type, form=form), 500
-            return jsonify({"error": str(e)}), 500
+            flash({"error": str(e)})
+            return render_template("update-policy-type.html", policy_type=policy_type, form=form), 500
 
     # If the form is not submitted or not valid, render the update-customer.html template with the prepopulated form
     return render_template("update-policy-type.html", policy_type=policy_type, form=form)
 
 @admin_bp.route("/claims")
 @login_required
+@role_required("admin")
 def view_claims():
     pending_claims = Claims.query.filter_by(Status='Pending').all()
     return render_template("claims-processing.html", pending_claims=pending_claims)
 
 @admin_bp.route("/process-claim/<ClaimID>", methods=["GET", "POST"])
 @login_required
+@role_required("admin")
 def process_claim(ClaimID):
     claim = Claims.query.get(ClaimID)
     if not claim:
         return "Claim not found", 404
 
     if request.method == "POST":
-        new_status = request.form['status']
+        new_status = request.form["status"]
         claim.Status = new_status
-        db.session.commit()
-        return redirect(url_for('admin_bp.view_claims'))
+        try:
+            claim.Status = new_status
+            db.session.commit()
+            flash("Successful status update.")
+            return redirect(url_for('admin_bp.view_claims'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Failed status update. Error: {str(e)}")
+            return redirect(url_for('admin_bp.view_claims'))
 
     return render_template("process_claim.html", claim=claim)
 
-def generate_chart():
-    users_count = Customer.query.filter_by(is_active=True).count()
 
-    # Create the bar chart
-    plt.figure(figsize=(8, 6))
-    plt.bar(["Current Users"], [users_count], color="skyblue")
-    plt.title("Number of Current Users")
-    plt.xlabel("User Status")
-    plt.ylabel("Count")
-    plt.grid(axis="y", linestyle="--", alpha=0.7)
+def policies_per_policy_type():
+    policy_type_counts = db.session.query(Policies.PolicyTypeID, func.count(Policies.PolicyID)).group_by(Policies.PolicyTypeID).all()
 
-    # Save the chart as a bytes object
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format="png")
-    buffer.seek(0)
+    policy_type_names = []
+    policy_type_counts_list = []
 
-    # Encode the bytes object as a base64 string
-    chart_data = base64.b64encode(buffer.getvalue()).decode()
+    for policy_type_id, count in policy_type_counts:
+        policy_type = PolicyType.query.get(policy_type_id)
+        policy_type_names.append(policy_type.name)
+        policy_type_counts_list.append(count)
 
-    return chart_data
+    plt.figure(figsize=(10, 6))
+    plt.bar(policy_type_names, policy_type_counts_list, color="grey")
+    plt.title("Policies per Policy Type")
+    plt.xlabel("Policy Type")
+    plt.ylabel('Number of Policies')
+    plt.xticks(rotation=30, ha="right")
+    plt.tight_layout()
+
+    bar_buffer = io.BytesIO()
+    plt.savefig(bar_buffer, format="png")
+    bar_buffer.seek(0)
+    bar_chart_data = base64.b64encode(bar_buffer.getvalue()).decode()
+
+    return bar_chart_data
+
+def policies_per_policy_type_line():
+    policy_type_counts = db.session.query(Policies.PolicyTypeID, func.count(Policies.PolicyID)).group_by(Policies.PolicyTypeID).all()
+
+    policy_type_names = []
+    policy_type_counts_list = []
+
+    for policy_type_id, count in policy_type_counts:
+        policy_type = PolicyType.query.get(policy_type_id)
+        policy_type_names.append(policy_type.name)
+        policy_type_counts_list.append(count)
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(policy_type_names, policy_type_counts_list, marker='o', color='blue', linestyle='-', label="Line Graph")
+    plt.title("Policies per Policy Type")
+    plt.xlabel("Policy Type")
+    plt.ylabel('Number of Policies')
+    plt.xticks(rotation=30, ha="right")
+    plt.legend()
+    plt.tight_layout()
+
+    line_buffer = io.BytesIO()
+    plt.savefig(line_buffer, format="png")
+    line_buffer.seek(0)
+    line_chart_data = base64.b64encode(line_buffer.getvalue()).decode()
+
+    return line_chart_data

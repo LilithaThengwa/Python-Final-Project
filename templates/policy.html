@@ -8,16 +8,13 @@
     }
     
     img {
-        /* width: 100%;
-        height: auto; */
         display: none;
     }
 }
 
-/* Style for larger screens (tablets, desktops) */
 @media (min-width: 601px) {
     .policy-container {
-        max-width: 800px;
+        max-width: 1500px;
         margin: 0 auto;
         padding: 20px;
         display: grid;
@@ -45,19 +42,9 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         .form-group {
             margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="number"], select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box; /* Include padding and border are in the width */
         }
         
         .get-estimate {
@@ -70,8 +57,8 @@
         }
 </style>
 {% extends 'base.html' %} {% block body %}
+<img src="{{ policy.img }}" alt="{{ policy.alt }}">
 <div class="container">
-    <img src="{{ policy.img }}" alt="{{ policy.alt }}">
     <div class="policy-container">
         <div class="policy">
             <h3>{{ policy.name }}</h3>
@@ -79,7 +66,7 @@
         </div>
         <div class="estimate-container">
             <h3>Get Insurance Estimate</h3>
-            <form action="{{ url_for('user_bp.get_quote')}}" method="post">
+            <form action="{{ url_for('user_bp.complete_quote')}}" method="post">
                 {{ form.hidden_tag() }}
                 <div class="form-group">
                     {{ form.cover_type.label }}

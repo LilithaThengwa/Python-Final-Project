@@ -1,40 +1,45 @@
-{% extends 'base.html' %} {% block body %}
-<div class="container mt-5">
-    <div class="text-center">
-        <h2>Complete your quote</h2>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="bg-light p-4 rounded">
-                <form action="#" method="post">
-                    <div class="form-group">
-                        <label for="name">Your Name:</label>
-                        <input class="form-control" type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Your Email Address:</label>
-                        <input class="form-control" type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Mobile Number:</label>
-                        <input class="form-control" type="mobile" id="mobile" name="mobile" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Estimated Premuim</label>
-                        <label for="premuim">{{premuim}}</label>
-                    </div>
-                    <button class="btn btn-primary btn-block" type="submit">Submit</button>
-                </form>
+<div class="estimate-container">
+    <h3>Get Insurance Estimate</h3>
+    <form action="{{ url_for('user_bp.get_quote')}}" method="post">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.cover_type.label }}
+            {{ form.cover_type(class="form-control") }}
+        </div>
+        <div class="form-group">
+            <label>Which of these apply to you:</label><br>
+            <div class="form-check">
+                {{ form.criminal_record(class="form-check-input") }}
+                {{ form.criminal_record.label(class="form-check-label") }}
+            </div>
+            <div class="form-check">
+                {{ form.tried(class="form-check-input") }}
+                {{ form.tried.label(class="form-check-label") }}
+            </div>
+            <div class="form-check">
+                {{ form.arrested(class="form-check-input") }}
+                {{ form.arrested.label(class="form-check-label") }}
+            </div>
+            <div class="form-check">
+                {{ form.none(class="form-check-input") }}
+                {{ form.none.label(class="form-check-label") }}
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="bg-light p-4 rounded text-center">
-                <i class="fas fa-phone"></i>
-                <span class="tel">123 456 7890</span>
-                <i class="fa-solid fa-envelope"></i>
-                <span class="tel"> insurance@example.co.za</span>
-            </div>
+        <div class="form-group">
+            {{ form.government_official.label }}
+            {{ form.government_official(class="form-control") }}
         </div>
-    </div>
+        <div class="form-group">
+            {{ form.age.label }}
+            {{ form.age(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.occupation.label }}
+            {{ form.occupation(class="form-control") }}
+        </div>
+        <div>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
 </div>
-{% endblock %}
+</div>

@@ -27,7 +27,7 @@
 
     .nav-link {
       border: none;
-       background: none;
+      background: none;
     }
   </style>
 </head>
@@ -36,7 +36,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand" href="#">
-      <img src="static\Screenshot 2024-03-29 100319.png" width="60" height="40" alt="">
+      <i class="fa-solid fa-skull-crossbones"></i>
     </a>
   </nav>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -51,16 +51,15 @@
       <a class="nav-link" href="/about/contact">Contact</a>
       <a class="nav-link" href="/quote">Get a quote</a>
       {% if current_user.is_authenticated %}
-          <a class="nav-link" href="/admin">Dashboard</a> 
-          {% endif %}
-      {% if user_role == "admin" %}<a class="nav-link" href="/admin">Admin</a>{% endif %}
+      <a class="nav-link" href="/user/dashboard">Dashboard</a>
+      {% endif %}
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
           Policies
         </a>
         <div class="dropdown-menu">
           {% for item in nav_dopdown_items %}
-          <a class="dropdown-item" href="/policy/{{ item.id }}">{{ item.name }}</a>
+          <a class="dropdown-item" href="/policy/{{ item.PolicyTypeID}}">{{ item.name }}</a>
           {% endfor %}
         </div>
       </li>
@@ -73,9 +72,9 @@
       </li>
       <li class="nav-item">
         <form action="{{ url_for('user_bp.logout') }}" method="post">
-            <button type="submit" class="nav-link">Logout</button>
+          <button type="submit" class="nav-link">Logout</button>
         </form>
-    </li>  
+      </li>
       </form>
       {% else %}
       <a class="text-light" href="/user/login">Log in <i class="fa-solid fa-user"></i></a>
@@ -89,38 +88,38 @@
 {% if user_role == "admin" and current_user.is_authenticated %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <nav class="navbar navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">
-          <img src="static\Screenshot 2024-03-29 100319.png" width="60" height="40" alt="">
-      </a>
+    <a class="navbar-brand" href="#">
+      <i class="fa-solid fa-skull-crossbones"></i>
+    </a>
   </nav>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-          <a class="nav-link" href="/admin/policies">Policies</a>
-          <a class="nav-link" href="/admin/customers">Customers</a>
-          <a class="nav-link" href="{{ url_for('admin_bp.view_claims') }}">Claims</a>
-          {% if current_user.is_authenticated %}
-          <a class="nav-link" href="/admin">Dashboard</a> 
-          {% endif %}
-      </ul>
-      <ul class="navbar-nav">
-          {% if current_user.is_authenticated %}
-          <li class="nav-item">
-              <a class="nav-link" href="/admin"><i class="fa-solid fa-user"> </i></a>
-          </li>
-          <li class="nav-item">
-              <form action="{{ url_for('user_bp.logout') }}" method="post">
-                  <button type="submit" class="nav-link">Logout</button>
-              </form>
-          </li>
-          </form>
-          {% endif %}
-      </ul>
+    <ul class="navbar-nav mr-auto">
+      <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      <a class="nav-link" href="/admin/policies">Policies</a>
+      <a class="nav-link" href="/admin/customers">Customers</a>
+      <a class="nav-link" href="{{ url_for('admin_bp.view_claims') }}">Claims</a>
+      {% if current_user.is_authenticated %}
+      <a class="nav-link" href="/admin">Dashboard</a>
+      {% endif %}
+    </ul>
+    <ul class="navbar-nav">
+      {% if current_user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link" href="/admin"><i class="fa-solid fa-user"> </i></a>
+      </li>
+      <li class="nav-item">
+        <form action="{{ url_for('user_bp.logout') }}" method="post">
+          <button type="submit" class="nav-link">Logout</button>
+        </form>
+      </li>
+      </form>
+      {% endif %}
+    </ul>
   </div>
 </nav>
 
