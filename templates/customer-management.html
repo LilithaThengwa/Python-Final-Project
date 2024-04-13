@@ -1,16 +1,3 @@
-<style>
-  .actions {
-    display: flex;
-  }
-
-  .Update {
-    margin-right: 20px;
-  }
-
-  .just {
-    padding-top: 0px;
-  }
-</style>
 {% extends 'base.html' %} {% block body %}
 
 {% with messages = get_flashed_messages() %}
@@ -53,7 +40,7 @@
           <div class="actions">
             <form action="{{url_for('admin_bp.show_update_customer') }}" method="POST">
               <input name="CustomerID" type="text" value="{{customer.CustomerID}}" hidden />
-              <button type="submit" class="btn btn-secondary Update">Update</button>
+              <button type="submit" class="btn btn-secondary">Update</button>
             </form>
           </div>
         </td>

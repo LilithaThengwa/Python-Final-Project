@@ -12,8 +12,20 @@ class Policies(db.Model):
     DateTakenOut = db.Column(db.Date, nullable=False)
     DateActive = db.Column(db.Date, nullable=False)
     Status = db.Column(db.String(20), default='Active')
-    
-    # Define the relationship with Customer and PolicyType tables
+
+    def to_dict(self):
+        return {
+            "PolicyID": self.PolicyID,
+            "CustomerID": self.CustomerID,
+            "PolicyTypeID": self.PolicyTypeID,
+            "ItemInsured": self.ItemInsured,
+            "InsuredValue": str(self.InsuredValue), 
+            "MonthlyPremium": str(self.MonthlyPremium), 
+            "DateTakenOut": str(self.DateTakenOut),  
+            "DateActive": str(self.DateActive), 
+            "Status": self.Status
+        }
+
     customer = db.relationship("Customer", back_populates="policies", foreign_keys=[CustomerID])
     policy_type = db.relationship("PolicyType", back_populates="policies")
     claims = db.relationship("Claims", back_populates="policy")

@@ -44,10 +44,11 @@
                     <form action="{{ url_for('admin_bp.process_claim', ClaimID=claim.ClaimID) }}" method="POST">
                         <label for="status">Select Status:</label>
                         <select id="status" name="status">
-                            <option value="Pending">More information needed</option>
+                            <option value="Pending">Investigating</option>
                             <option value="Approved">Approve</option>
+                            <option value="Approved">Decline</option>
                         </select>
-                        <button type="submit">Process</button>
+                        <button type="submit" class="btn btn-secondary">Process</button>
                     </form>
                 </td>
             </tr>

@@ -40,7 +40,6 @@ class UpdatePolicyTypeForm(FlaskForm):
 @login_required
 @role_required("admin")
 def admin_dashboard():
-    # chart_data = generate_chart()
     bar_chart = policies_per_policy_type()
     line_chart = policies_per_policy_type_line()
     return render_template("admindashboard.html", bar_chart=bar_chart, line_chart=line_chart)
@@ -144,7 +143,8 @@ def update_policy_info(PolicyTypeID):
 @login_required
 @role_required("admin")
 def view_claims():
-    pending_claims = Claims.query.filter_by(Status='Pending').all()
+    unresolved = ["Pending", "Investigating"]
+    pending_claims = Claims.query.filter(Claims.Status.in_(unresolved)).all()
     return render_template("claims-processing.html", pending_claims=pending_claims)
 
 @admin_bp.route("/process-claim/<ClaimID>", methods=["GET", "POST"])
@@ -162,11 +162,11 @@ def process_claim(ClaimID):
             claim.Status = new_status
             db.session.commit()
             flash("Successful status update.")
-            return redirect(url_for('admin_bp.view_claims'))
+            return redirect(url_for("admin_bp.view_claims"))
         except Exception as e:
             db.session.rollback()
             flash(f"Failed status update. Error: {str(e)}")
-            return redirect(url_for('admin_bp.view_claims'))
+            return redirect(url_for("admin_bp.view_claims"))
 
     return render_template("process_claim.html", claim=claim)
 

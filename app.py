@@ -96,11 +96,13 @@ from routes.about_bp import about_bp
 from routes.user_bp import user_bp
 from routes.admin_bp import admin_bp
 from routes.main_bp import main_bp
+from routes.crud_bp import crud_bp
 
 app.register_blueprint(about_bp, url_prefix="/about")
 app.register_blueprint(user_bp, url_prefix="/user")
 app.register_blueprint(admin_bp, url_prefix="/admin")
 app.register_blueprint(main_bp, url_prefix="/main")
+app.register_blueprint(crud_bp, url_prefix="/raw-crud")
 
 # try:
 #     with app.app_context():
