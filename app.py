@@ -31,6 +31,11 @@ def load_user(user_id):
 def inject_user_role():
     user_role = session.get("user_role")
     return dict(user_role=user_role)
+
+@app.context_processor
+def inject_items():
+    items = [policy for policy in PolicyType.query.all()] 
+    return dict(nav_dopdown_items=items)
     
 if __name__ == "__main__":
     app.run(debug = True)

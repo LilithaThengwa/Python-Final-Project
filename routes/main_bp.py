@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template
 from wtforms import StringField, SubmitField, IntegerField, SelectField, BooleanField
 from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
@@ -34,18 +34,6 @@ class LegalInsuranceEstimateForm(FlaskForm):
         ("Divorced", "Divorced")
     ], validators=[DataRequired()])
     submit = SubmitField("Get Estimate")
-
-# =============================================================================================================================
-
-@main_bp.context_processor
-def inject_items():
-    items = [policy for policy in PolicyType.query.all()] 
-    return dict(nav_dopdown_items=items)
-
-@main_bp.context_processor
-def inject_user_role():
-    user_role = session.get("user_role")
-    return dict(user_role=user_role)
 
 @main_bp.route("/")
 def home():
