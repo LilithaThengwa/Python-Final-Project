@@ -1,5 +1,5 @@
 <style>
-        .claimhistory {
+    .claimhistory {
         text-align: center;
     }
 
@@ -16,8 +16,34 @@
         box-sizing: border-box;
         list-style-type: none;
     }
+
+    .cust-button {
+        padding: 0; 
+        border: none; 
+        background: none;
+    }
+
+    .welcome {
+        font-size: 2.5rem;
+    }
 </style>
 {% extends 'base.html' %} {% block body %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <i aria-hidden="true" class="fa-solid fa-xmark"></i>
+      </button>
+      <ul class="list-unstyled">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endwith %}
+
 <div class="container-fluid">
     <div class="row">
         <nav class="col-md-2 d-md-block bg-light sidebar"> <!-- sidebar -->
@@ -26,34 +52,34 @@
                     <li class="nav-item">
                         <form action="{{url_for('user_bp.show_file_claim') }}" method="POST">
                             <input name="CustomerID" type="text" value="{{customer.CustomerID}}" hidden />
-                            <button type="submit">File a new claim</button>
+                            <button type="submit" class="nav-link btn btn-link">
+                                File a new claim
+                            </button>
                         </form>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            View my policies
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <form action="{{url_for('user_bp.show_register_for_policy') }}" method="POST">
-                            <input name="CustomerID" type="text" value="{{customer.CustomerID}}" hidden />
-                            <button type="submit">Take out a new policy</button>
+                        <form action="{{url_for('user_bp.customer_policies') }}" method="POST">
+                            <input name="CustomerID" type="text" value="{{ customer.CustomerID }}" hidden />
+                            <button type="submit" class="nav-link btn btn-link cust-button">
+                                View my policies
+                            </button>
                         </form>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Update my profile
-                        </a>
+                        <form action="{{ url_for('user_bp.show_register_for_policy') }}" method="POST">
+                            <input name="CustomerID" type="text" value="{{ customer.CustomerID }}" hidden />
+                            <button type="submit" class="nav-link btn btn-link">
+                                Take out a new policy
+                            </button>
+                        </form>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Claim History
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Pending Claims
-                        </a>
+                        <form action="{{url_for('admin_bp.show_update_customer') }}" method="POST">
+                            <input name="CustomerID" type="text" value="{{ customer.CustomerID }}" hidden />
+                            <button type="submit" class="nav-link btn btn-link">
+                                Update my Profile
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </div>
@@ -61,7 +87,7 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 d-none d-md-block">
             <div
                 class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <p class="font-size-xl mb-1">Welcome, <span class="font-weight-bold">{{customer.FirstName}}</span></p>
+                <p class="font-size-xl mb-1 welcome"><span class="font-weight-bold">Welcome</span>, {{customer.FirstName}}</p>
             </div>
             <div class="claims">
                 <h3>Claims</h3>

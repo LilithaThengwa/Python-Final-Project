@@ -1,44 +1,147 @@
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
     .container {
-        display: flex; /* Use Flexbox to create a responsive layout */
-        flex-wrap: wrap; /* Allow items to wrap onto multiple lines */
-        justify-content: center; /* Center-align items */
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .card {
         border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-        margin: 20px; 
-        width: 400px; 
-        overflow: hidden; /* Hide overflowing content */
-        transition: transform 0.3s ease-in-out; /* Add smooth hover effect */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: 10px;
+        width: 400px;
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out;
     }
 
     .card:hover {
         transform: translateY(-5px);
     }
+
+    .containerr {
+        margin: 70px auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    .inner-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        justify-items: center;
+    }
+
+    @media (max-width: 840px) {
+        .card {
+            margin: 10px;
+            width: 300px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .card {
+            margin: 10px;
+            width: 200px;
+        }
+    }
+
+    @media (max-width: 440px) {
+        .card {
+            margin: 10px;
+            width: 300px;
+        }
+
+        .inner-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            justify-items: center;
+        }
+    }
+
+
+    @media (max-width: 320px) {
+        .card {
+            margin: 10px;
+            width: 200px;
+        }
+
+        .inner-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            justify-items: center;
+        }
+    }
 </style>
 {% extends 'base.html' %} {% block body %}
-<div class="container">
-    {% for policy in policyTypes %}
-    <div class="card" style="width: 18rem;">
-        <img src="{{ policy.img }}" class="card-img-top" alt={{policy.alt}}>
-        <div class="card-body">
-            <h4 class="card-title">{{ policy.name }}</h4>
-            <p class="card-text">{{ policy.short_description }}</p>
-            <a href="/policy/{{ policy.PolicyTypeID }}" class="btn btn-primary">Learn more...</a>
+
+<section id="home" class="jumbotron text-center">
+    <div class="container">
+        <div class="non-cards">
+            <h1 class="display-4">Affordable Coverage for Life's Little Mishaps</h1>
+            <p class="lead">Get peace of mind with our comprehensive coverage options</p>
+            <a href="#contact" class="btn btn-primary btn-lg">Get a Quote</a>
+
+            <div class="inner-container">
+                {% for policy in policyTypes %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ policy.name }}</h4>
+                            <p class="card-text">{{ policy.short_description }}</p>
+                            <a href="/policy/{{ policy.PolicyTypeID }}" class="btn btn-primary">Learn more...</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
-    {% endfor %}
-</div>
+</section>
+
+
+<section id="about" class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <h2 class="pb-3">About Us</h2>
+                <p>At InsuranceCo., we are your trusted partner in various insurance solutions. 
+                    Committed to protecting your rights and providing peace of mind, we offer comprehensive coverage
+                   tailored to meet your legal needs, in addition to our other offerings. 
+                   We are dedicated to delivering excellent service and expert guidance every step of your journey. 
+                  </p>
+                  <p>Our company was founded and is based in Cape Town. With branches in all major cities in Southern Africa.
+                  </p>
+            </div>
+        </div>
+</section>
+
+<section id="contact" class="bg-light py-5">
+    <div class="containerr mt-5">
+        <div class="col-md-6">
+            <h2 class="text-center">Contact Us</h2>
+            <div class="bg-light p-4 rounded">
+                <form action="#" method="post">
+                    <div class="form-group">
+                        <label for="name">Your Name:</label>
+                        <input class="form-control" type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Your Email Address:</label>
+                        <input class="form-control" type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message:</label>
+                        <textarea class="form-control" id="message" name="message" required></textarea>
+                    </div>
+                    <button class="btn btn-primary btn-block" type="submit">Submit</button>
+                </form>
+            </div>
+            <div class="bg-light p-4 rounded text-center">
+                <i class="fas fa-phone"></i>
+                <span class="tel">123 456 7890&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <i class="fa-solid fa-envelope"></i>
+                <span class="tel"> insurance@example.co.za</span>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
 {% endblock %}
-
-
-
-
