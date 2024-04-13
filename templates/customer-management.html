@@ -1,13 +1,52 @@
-{% extends 'admin-base.html' %} {% block body %}
-<div class="movie-list-container">
-  {% for customer in customers %}
-  <ul>
-    <li><p>{{customer.FirstName}}</p>
-        <form action="{{url_for('admin_bp.show_update_customer') }}" method="POST">
-        <input name="CustomerID" type="text" value="{{customer.CustomerID}}" hidden />
-        <button type="submit">Update</button>
-      </form>
-    </li>
-  </ul>
-  {% endfor %}
+{% extends 'base.html' %} {% block body %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <i aria-hidden="true" class="fa-solid fa-xmark"></i>
+      </button>
+      <ul class="list-unstyled">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endwith %}
+
+<h3 class="text-center m-3">Users</h3>
+<div class="mr-2 ml-2">
+  <table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        <th>Name</th>
+        <th>Contact</th>
+        <th>Policies</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for customer in customers %}
+      <tr>
+        <td>{{ customer.FirstName }}&nbsp;{{ customer.LastName }}</td>
+        <td>{{ customer.PhoneNumber }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ customer.Email }}</td>
+        <td>
+          {% for policy in customer.policies %}
+          {{ policy.ItemInsured }} {{ policy.PolicyID }}
+          {% endfor %}
+        </td>
+        <td>
+          <div class="actions">
+            <form action="{{url_for('admin_bp.show_update_customer') }}" method="POST">
+              <input name="CustomerID" type="text" value="{{customer.CustomerID}}" hidden />
+              <button type="submit" class="btn btn-secondary">Update</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

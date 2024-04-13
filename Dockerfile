@@ -1,7 +1,7 @@
-# Use an official Python runtime as a parent image
+# Use an official Python runtime as a parent image. Dependent on another dockerfile with linus installed
 FROM python:3.8-slim
  
-# Set the working directory in the container
+# Set the working directory in the container. 
 WORKDIR /usr/src/app
  
 # Install system dependencies for PyODBC and MSSQL ODBC Driver
