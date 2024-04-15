@@ -17,18 +17,17 @@
 -	Under policy management (click view policies), our current policy offerings are displayed to the admin in a table. The admin may update policy offerings. Changes made here will be reflected in the home page and the policy pages.
 -	Under claims processing ( click pending claims ), the admin can see all claims that have yet to be approved. The admin can process claims here.
 -	On the top-navbar, policies = policy management; customers = customer management, claims = claims processing.
+- To make a user an admin, sign up as a user and then update the role to 'admin' directly on the database.
 
 ## Customers
 
 -	The customer dashboard has a sidebar for navigation.  The sidebar has links for filing a new claim, viewing policies, registering for new policies and updating the profile.
 -	The rest of the dashboard shows a table with all customer claims, both approved and pending. There is also a second table that shows all customer policies.
 -	Users may file a claim, which will have the pending status until it is processed by an admin.
--	Customers can delete their policies, futue version will remove tis functionality to avoid a loss of historical data. Rather the policy will be shown as inactive.
+-	Customers can delete their policies, future version will remove tis functionality to avoid a loss of historical data. Rather the policy will be shown as inactive.
 -	After registering for a policym admins process the application and send the result back to the user. Future versions will see this functionality renamed to apply.
 -	Customers may update their details by clicking on update my profile.
 
 ## RESTful API
 
 - When adding a claim using, do not specify date filed.
-
-

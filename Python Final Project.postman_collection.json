@@ -1,0 +1,550 @@
+{
+	"info": {
+		"_postman_id": "9349b5d1-9431-4593-bfd9-5b49b79214a8",
+		"name": "Python Final Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get all users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user  by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/1e52e8aa-2e55-40c5-9861-bc0c9926e565",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"1e52e8aa-2e55-40c5-9861-bc0c9926e565"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all policy types",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/policy-type",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"policy-type"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get policy type  by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/policy-type/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"policy-type",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all policies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/policies",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"policies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get policy by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/policies/03df76a3-3bde-466d-bb63-3cd1859ba1bf",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"policies",
+						"03df76a3-3bde-466d-bb63-3cd1859ba1bf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all claims",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/claims",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"claims"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get claim by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/claims/5d98241d-f322-4b2d-b285-e1be49094e98",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"claims",
+						"5d98241d-f322-4b2d-b285-e1be49094e98"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"Email\": \"jamesbrowne@example.com\",\r\n\"FirstName\": \"James\",\r\n\"LastName\":\"Brown\",\r\n\"Password\": \"12345678\",\r\n\"PhoneNumber\": \"123\",\r\n\"Username\": \"jamesbrown\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create policy type",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"PolicyTypeID\": \"6\",\r\n    \"alt\": \"placeholder image\",\r\n    \"description\": \"Description of Luxury Insurance\",\r\n    \"img\": \"https://previews.123rf.com/images/enginakyurt/enginakyurt1810/enginakyurt181000239/110640624-toy-cars-close-up-background.jpg\",\r\n    \"name\": \"Luxury Insurance\",\r\n    \"short_description\": \"Short Description of Luxury Insurance\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/policy-type",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"policy-type"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create policy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"CustomerID\": \"1e52e8aa-2e55-40c5-9861-bc0c9926e565\",\r\n        \"DateActive\": \"2024-04-13\",\r\n        \"DateTakenOut\": \"2024-04-11\",\r\n        \"InsuredValue\": \"800000.00\",\r\n        \"ItemInsured\": \"Volvo\",\r\n        \"MonthlyPremium\": \"800.00\",\r\n        \"PolicyID\": \"03df76a3-3bde-466d-bb63-3cd1859ba1bp\",\r\n        \"PolicyTypeID\": \"1\",\r\n        \"Status\": \"Active\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/policies",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"policies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create claim",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"Amount\": \"10.00\",\r\n        \"ClaimID\": \"5d98241d-f322-4b2d-b285-e1be49094e97\",\r\n        \"CustomerID\": \"1e52e8aa-2e55-40c5-9861-bc0c9926e565\",\r\n        \"Description\": \"Added with postman\",\r\n        \"PolicyID\": \"03df76a3-3bde-466d-bb63-3cd1859ba1bf\",\r\n        \"Status\": \"Pending\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/claims",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"claims"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete user by id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/5a3b117e-1ef2-40c4-86f0-a694ad3bcd31",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"5a3b117e-1ef2-40c4-86f0-a694ad3bcd31"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete policy type by id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/policy-type/6",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"policy-type",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete policy by id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/policies/03df76a3-3bde-466d-bb63-3cd1859ba1bp",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"policies",
+						"03df76a3-3bde-466d-bb63-3cd1859ba1bp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete claim by id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/claims/5d98241d-f322-4b2d-b285-e1be49094e98",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"claims",
+						"5d98241d-f322-4b2d-b285-e1be49094e98"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Email\": \"johndoe@example.co.za\",\r\n    \"FirstName\": \"John\",\r\n    \"LastName\": \"Doe\",\r\n    \"Password\": \"scrypt:32768:8:1$GO6tfiibdiSm8VDA$0719bc3533f7faf287cb2f7e21a6c6cdf77fd9d7929e345f2e1821b71aa7fdfb37ff7f28608519e2f68b0b0191fbd38f5ed5e2812bfebbb0180e71b604a15318\",\r\n    \"PhoneNumber\": \"123\",\r\n    \"Username\": \"johndoe\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/1e52e8aa-2e55-40c5-9861-bc0c9926e565",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"1e52e8aa-2e55-40c5-9861-bc0c9926e565"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update policy type",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"PolicyTypeID\": \"1\",\r\n    \"alt\": \"placeholder image\",\r\n    \"description\": \"Description of Car Insurance to be added next\",\r\n    \"img\": \"https://previews.123rf.com/images/enginakyurt/enginakyurt1810/enginakyurt181000239/110640624-toy-cars-close-up-background.jpg\",\r\n    \"name\": \"Car Insurance\",\r\n    \"short_description\": \"Short Description of Car Insurance\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/policy-type/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"policy-type",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update policy",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"CustomerID\": \"1e52e8aa-2e55-40c5-9861-bc0c9926e565\",\r\n    \"DateActive\": \"2024-04-11\",\r\n    \"DateTakenOut\": \"2024-04-11\",\r\n    \"InsuredValue\": \"800000.00\",\r\n    \"ItemInsured\": \"Volvo\",\r\n    \"MonthlyPremium\": \"1500.00\",\r\n    \"PolicyID\": \"03df76a3-3bde-466d-bb63-3cd1859ba1bf\",\r\n    \"PolicyTypeID\": \"1\",\r\n    \"Status\": \"Active\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/policies/03df76a3-3bde-466d-bb63-3cd1859ba1bf",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"policies",
+						"03df76a3-3bde-466d-bb63-3cd1859ba1bf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update claim",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"Amount\": \"10000.00\",\r\n        \"ClaimID\": \"84db2c79-9b4c-4842-855f-fe0537b01754\",\r\n        \"CustomerID\": \"1e52e8aa-2e55-40c5-9861-bc0c9926e565\",\r\n        \"Description\": \"crash, policy holder not at fault\",\r\n        \"PolicyID\": \"03df76a3-3bde-466d-bb63-3cd1859ba1bf\",\r\n        \"Status\": \"Approved\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/raw-crud/claim/84db2c79-9b4c-4842-855f-fe0537b01754",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"raw-crud",
+						"claim",
+						"84db2c79-9b4c-4842-855f-fe0537b01754"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
